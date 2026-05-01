@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CATEGORY_LABEL } from "../types";
+import { CATEGORY_LABEL, DIFFICULTY_LABEL } from "../types";
 import { clearHistory, loadHistory } from "../lib/storage";
 
 interface Props {
@@ -45,13 +45,29 @@ export function History({ onBack }: Props) {
       <section className="card">
         {[...history.sessions].reverse().map((s, i) => {
           const pct = Math.round((s.correct / s.total) * 100);
-          const label =
+          const categoryLabel =
             s.category === "all" ? "全カテゴリ" : CATEGORY_LABEL[s.category];
+          const difficultyLabel =
+            s.difficulty === "all"
+              ? "全難易度"
+              : DIFFICULTY_LABEL[s.difficulty];
           const date = new Date(s.finishedAt).toLocaleString("ja-JP");
+          const badgeClass =
+            s.difficulty === "all"
+              ? "difficulty-badge all"
+              : `difficulty-badge ${s.difficulty}`;
           return (
             <div className="history-item" key={`${s.finishedAt}-${i}`}>
-              <span>
-                {date} · {label}
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  flexWrap: "wrap",
+                }}
+              >
+                {date} · {categoryLabel}
+                <span className={badgeClass}>{difficultyLabel}</span>
               </span>
               <span>
                 {s.correct}/{s.total} ({pct}%)

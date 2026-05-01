@@ -1,5 +1,5 @@
 import type { SessionResult } from "../types";
-import { CATEGORY_LABEL } from "../types";
+import { CATEGORY_LABEL, DIFFICULTY_LABEL } from "../types";
 
 interface Props {
   session: SessionResult;
@@ -17,15 +17,33 @@ export function Result({ session, onRetry, onHome }: Props) {
         : pct >= 60
           ? "Good"
           : "もう一度挑戦しよう";
-  const label =
+  const categoryLabel =
     session.category === "all"
       ? "全カテゴリ"
       : CATEGORY_LABEL[session.category];
+  const difficultyLabel =
+    session.difficulty === "all"
+      ? "全難易度"
+      : DIFFICULTY_LABEL[session.difficulty];
 
   return (
     <section className="card center">
-      <div className="dim" style={{ fontSize: "0.85rem" }}>
-        {label}
+      <div
+        style={{
+          display: "flex",
+          gap: 6,
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <span className="tag">{categoryLabel}</span>
+        {session.difficulty !== "all" ? (
+          <span className={`difficulty-badge ${session.difficulty}`}>
+            {difficultyLabel}
+          </span>
+        ) : (
+          <span className="difficulty-badge all">{difficultyLabel}</span>
+        )}
       </div>
       <div className="score" style={{ marginTop: 12 }}>
         {session.correct} / {session.total}

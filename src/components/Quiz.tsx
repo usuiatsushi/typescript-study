@@ -1,17 +1,26 @@
 import { useMemo, useState } from "react";
-import type { AnswerResult, Category, SessionResult } from "../types";
-import { CATEGORY_LABEL } from "../types";
+import type {
+  AnswerResult,
+  Category,
+  Difficulty,
+  SessionResult,
+} from "../types";
+import { CATEGORY_LABEL, DIFFICULTY_LABEL } from "../types";
 import { pickQuestions } from "../lib/quiz";
 import { appendSession } from "../lib/storage";
 import { RichText } from "./RichText";
 
 interface Props {
   category: Category | "all";
+  difficulty: Difficulty | "all";
   onFinish: (session: SessionResult) => void;
 }
 
-export function Quiz({ category, onFinish }: Props) {
-  const questions = useMemo(() => pickQuestions(category), [category]);
+export function Quiz({ category, difficulty, onFinish }: Props) {
+  const questions = useMemo(
+    () => pickQuestions(category, difficulty),
+    [category, difficulty],
+  );
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<AnswerResult[]>([]);
@@ -20,7 +29,7 @@ export function Quiz({ category, onFinish }: Props) {
   if (questions.length === 0) {
     return (
       <section className="card">
-        <p>このカテゴリには問題がありません。</p>
+        <p>このカテゴリ・難易度に該当する問題がありません。</p>
       </section>
     );
   }
@@ -55,6 +64,7 @@ export function Quiz({ category, onFinish }: Props) {
       startedAt,
       finishedAt: new Date().toISOString(),
       category,
+      difficulty,
       total: questions.length,
       correct,
       answers: finalAnswers,
@@ -66,11 +76,15 @@ export function Quiz({ category, onFinish }: Props) {
   const progress = ((index + (isAnswered ? 1 : 0)) / questions.length) * 100;
   const categoryLabel =
     category === "all" ? "全カテゴリ" : CATEGORY_LABEL[category];
+  const difficultyHeaderLabel =
+    difficulty === "all" ? "全難易度" : DIFFICULTY_LABEL[difficulty];
 
   return (
     <>
       <div className="progress">
-        <span>{categoryLabel}</span>
+        <span>
+          {categoryLabel} · {difficultyHeaderLabel}
+        </span>
         <span>
           {index + 1} / {questions.length}
         </span>
@@ -82,6 +96,9 @@ export function Quiz({ category, onFinish }: Props) {
       <section className="card">
         <div>
           <span className="tag">{CATEGORY_LABEL[current.category]}</span>
+          <span className={`difficulty-badge ${current.difficulty}`}>
+            {DIFFICULTY_LABEL[current.difficulty]}
+          </span>
         </div>
         <h2 style={{ marginTop: 8 }}><RichText text={current.prompt} /></h2>
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Category, SessionResult } from "./types";
+import type { Category, Difficulty, SessionResult } from "./types";
 import { Home } from "./components/Home";
 import { Quiz } from "./components/Quiz";
 import { Result } from "./components/Result";
@@ -7,7 +7,11 @@ import { History } from "./components/History";
 
 type View =
   | { kind: "home" }
-  | { kind: "quiz"; category: Category | "all" }
+  | {
+      kind: "quiz";
+      category: Category | "all";
+      difficulty: Difficulty | "all";
+    }
   | { kind: "result"; session: SessionResult }
   | { kind: "history" };
 
@@ -30,7 +34,9 @@ export function App() {
 
       {view.kind === "home" && (
         <Home
-          onStart={(category) => setView({ kind: "quiz", category })}
+          onStart={(category, difficulty) =>
+            setView({ kind: "quiz", category, difficulty })
+          }
           onShowHistory={() => setView({ kind: "history" })}
         />
       )}
@@ -38,6 +44,7 @@ export function App() {
       {view.kind === "quiz" && (
         <Quiz
           category={view.category}
+          difficulty={view.difficulty}
           onFinish={(session) => setView({ kind: "result", session })}
         />
       )}
@@ -46,7 +53,11 @@ export function App() {
         <Result
           session={view.session}
           onRetry={() =>
-            setView({ kind: "quiz", category: view.session.category })
+            setView({
+              kind: "quiz",
+              category: view.session.category,
+              difficulty: view.session.difficulty,
+            })
           }
           onHome={() => setView({ kind: "home" })}
         />
