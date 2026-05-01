@@ -342,14 +342,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`function wrap<T = string>(x?: T): T[] { return x === undefined ? [] : [x] }` のデフォルト型パラメータの効果は？",
     choices: [
-      "型引数を省略した場合、T は string として扱われる",
+      "型引数も指定されず引数からも推論できない場合、T は string にフォールバックする",
       "T が常に string になり上書きできない",
       "実行時に T が string に変換される",
-      "デフォルト値が string になる",
+      "引数 x のデフォルト値が string になる",
     ],
     answerIndex: 0,
     explanation:
-      "ジェネリクスの `= string` はデフォルト型パラメータ。明示しない場合に使われ、`wrap<number>()` のように上書きも可能です。",
+      "`<T = string>` はデフォルト**型**パラメータ。引数から T を推論できる場合は推論が優先されます（例: `wrap(42)` の T は number）。引数が省略され型引数も無い `wrap()` のときに T は string になります。`wrap<number>()` のように明示で上書きも可能です。実行時の値変換やデフォルト値設定とは無関係です。",
   },
   {
     id: "gen-005",
