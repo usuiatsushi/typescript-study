@@ -3,8 +3,8 @@ import type { Question } from "../types";
 export const QUESTIONS: readonly Question[] = [
   {
     id: "basic-001",
-    difficulty: "easy",
     category: "basic",
+    difficulty: "easy",
     prompt: "次のうち、TypeScriptに存在しない基本型はどれですか？",
     choices: ["number", "string", "char", "boolean"],
     answerIndex: 2,
@@ -13,8 +13,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "basic-002",
-    difficulty: "easy",
     category: "basic",
+    difficulty: "easy",
     prompt: "any と unknown の違いとして正しいのはどれですか？",
     choices: [
       "any は型チェックを抑制するが、unknown は使用前に型の絞り込みが必要",
@@ -28,8 +28,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "basic-003",
-    difficulty: "easy",
     category: "basic",
+    difficulty: "easy",
     prompt: "`const arr: number[] = [];` と等価な型表記はどれですか？",
     choices: [
       "Array<number>",
@@ -43,8 +43,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "basic-004",
-    difficulty: "easy",
     category: "basic",
+    difficulty: "easy",
     prompt: "void と undefined の関係について正しいのは？",
     choices: [
       "void は何も返さない関数の戻り値型として使われ、undefined を含む",
@@ -59,8 +59,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "iface-001",
-    difficulty: "easy",
     category: "interface",
+    difficulty: "easy",
     prompt: "interface と type alias の違いとして正しいのはどれ？",
     choices: [
       "interface は宣言マージ可能だが type alias は不可",
@@ -74,8 +74,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "iface-002",
-    difficulty: "easy",
     category: "interface",
+    difficulty: "easy",
     prompt:
       "`interface User { readonly id: number; name: string }` の readonly の意味は？",
     choices: [
@@ -90,8 +90,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "iface-003",
-    difficulty: "easy",
     category: "interface",
+    difficulty: "easy",
     prompt: "オプショナルプロパティを表す書き方は？",
     choices: ["name?: string", "name!: string", "name: string?", "name: ?string"],
     answerIndex: 0,
@@ -100,8 +100,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "gen-001",
-    difficulty: "easy",
     category: "generics",
+    difficulty: "easy",
     prompt:
       "`function identity<T>(x: T): T { return x }` を `identity('hi')` と呼んだとき、推論される T は？",
     choices: ["string", "'hi'", "any", "unknown"],
@@ -111,8 +111,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "gen-002",
-    difficulty: "medium",
     category: "generics",
+    difficulty: "medium",
     prompt: "ジェネリック制約 `<T extends { id: number }>` の意味は？",
     choices: [
       "T は id: number を持つ型でなければならない",
@@ -126,8 +126,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "gen-003",
-    difficulty: "medium",
     category: "generics",
+    difficulty: "medium",
     prompt: "`keyof` 演算子の説明として正しいのは？",
     choices: [
       "オブジェクト型のキーのユニオン型を返す",
@@ -142,8 +142,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "util-001",
-    difficulty: "easy",
     category: "utility",
+    difficulty: "easy",
     prompt: "`Partial<T>` の説明は？",
     choices: [
       "T の全プロパティをオプショナルにした型",
@@ -156,8 +156,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "util-002",
-    difficulty: "easy",
     category: "utility",
+    difficulty: "easy",
     prompt: "`Pick<T, K>` と `Omit<T, K>` の関係は？",
     choices: [
       "Pick は K のキーのみ抽出、Omit は K のキーを除外",
@@ -171,8 +171,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "util-003",
-    difficulty: "easy",
     category: "utility",
+    difficulty: "medium",
     prompt:
       "`type R = ReturnType<typeof fn>` は何を返しますか？(fn は関数)",
     choices: [
@@ -187,8 +187,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "util-004",
-    difficulty: "easy",
     category: "utility",
+    difficulty: "easy",
     prompt: "`Required<T>` の効果は？",
     choices: [
       "T のオプショナルプロパティを必須にする",
@@ -202,8 +202,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "adv-001",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
       "`type IsString<T> = T extends string ? true : false` の `IsString<'a' | 1>` は？",
     choices: ["boolean", "true", "false", "never"],
@@ -213,8 +213,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "adv-002",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
       "`type ElementOf<T> = T extends (infer U)[] ? U : never` で `ElementOf<string[]>` は？",
     choices: ["string", "string[]", "never", "unknown"],
@@ -224,8 +224,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "adv-003",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
       "Mapped Type で `[K in keyof T]-?: T[K]` の `-?` の意味は？",
     choices: [
@@ -240,8 +240,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "adv-004",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt: "Template Literal Type の例として正しいのは？",
     choices: [
       "type Hello<T extends string> = `hello, ${T}`",
@@ -255,8 +255,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "adv-005",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "medium",
     prompt: "Discriminated Union の判別タグとしてよく使われるのは？",
     choices: [
       "リテラル型のプロパティ (例: kind: 'circle' | 'square')",
@@ -271,8 +271,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "basic-005",
-    difficulty: "medium",
     category: "basic",
+    difficulty: "medium",
     prompt:
       "`let x = 'hello'` と `const y = 'hello'` で推論される型はそれぞれ何ですか？",
     choices: [
@@ -287,8 +287,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "basic-006",
-    difficulty: "medium",
     category: "basic",
+    difficulty: "medium",
     prompt:
       "`const t: [string, number] = ['age', 20]` のタプル型と `(string | number)[]` の違いは？",
     choices: [
@@ -304,8 +304,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "iface-004",
-    difficulty: "medium",
     category: "interface",
+    difficulty: "medium",
     prompt:
       "`interface Dict { [key: string]: number }` のインデックスシグネチャの説明として正しいのは？",
     choices: [
@@ -320,8 +320,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "iface-005",
-    difficulty: "medium",
     category: "interface",
+    difficulty: "medium",
     prompt:
       "`interface A { run(x: number): void }` と `interface B { run: (x: number) => void }` の違いとして正しいのは？",
     choices: [
@@ -337,8 +337,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "gen-004",
-    difficulty: "hard",
     category: "generics",
+    difficulty: "hard",
     prompt:
       "`function wrap<T = string>(x?: T): T[] { return x === undefined ? [] : [x] }` のデフォルト型パラメータの効果は？",
     choices: [
@@ -353,8 +353,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "gen-005",
-    difficulty: "hard",
     category: "generics",
+    difficulty: "hard",
     prompt:
       "`type FirstArg<T> = T extends (a: infer A, ...rest: any[]) => any ? A : never` で `FirstArg<(s: string, n: number) => void>` は？",
     choices: ["string", "number", "[string, number]", "never"],
@@ -365,8 +365,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "util-005",
-    difficulty: "medium",
     category: "utility",
+    difficulty: "medium",
     prompt:
       "`type Scores = Record<'math' | 'eng', number>` と等価な型はどれ？",
     choices: [
@@ -381,8 +381,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "util-006",
-    difficulty: "medium",
     category: "utility",
+    difficulty: "medium",
     prompt: "`NonNullable<T>` の説明として正しいのは？",
     choices: [
       "T から null と undefined を除去したユニオン型",
@@ -397,8 +397,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "adv-006",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
       "`const config = { mode: 'dark', size: 12 } as const` の `as const` の効果は？",
     choices: [
@@ -413,8 +413,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "adv-007",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
       "`satisfies` 演算子の役割として正しいのは？",
     choices: [
@@ -425,13 +425,13 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`satisfies` は型注釈と異なり、値の具体的な推論型（リテラル型など）を失わずに、指定した型への適合性だけを検査します。`as` と違い不正な型へのキャストはできません。",
+      "`satisfies` は型注釈と異なり、値の具体的な推論型(リテラル型など)を失わずに、指定した型への適合性だけを検査します。`as` と違い不正な型へのキャストはできません。",
   },
 
   {
     id: "narrow-001",
-    difficulty: "medium",
     category: "narrowing",
+    difficulty: "medium",
     prompt:
       "`function f(x: string | number) { if (typeof x === 'string') { /* ここでの x の型は？ */ } }`",
     choices: ["string", "number", "string | number", "unknown"],
@@ -441,8 +441,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "narrow-002",
-    difficulty: "medium",
     category: "narrowing",
+    difficulty: "medium",
     prompt:
       "ユーザー定義型ガードを書く正しい構文はどれですか？",
     choices: [
@@ -457,8 +457,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "narrow-003",
-    difficulty: "medium",
     category: "narrowing",
+    difficulty: "medium",
     prompt:
       "`in` 演算子の絞り込みとして正しいのは？",
     choices: [
@@ -473,8 +473,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "narrow-004",
-    difficulty: "medium",
     category: "narrowing",
+    difficulty: "medium",
     prompt:
       "switch で網羅性を保証するために default で使うべき型はどれですか？",
     choices: ["never", "void", "unknown", "any"],
@@ -484,8 +484,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "narrow-005",
-    difficulty: "medium",
     category: "narrowing",
+    difficulty: "medium",
     prompt:
       "`x: string | null` を非 null に絞り込む最も簡潔な方法は？",
     choices: [
@@ -501,8 +501,8 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "class-001",
-    difficulty: "medium",
     category: "classes",
+    difficulty: "medium",
     prompt:
       "TypeScript のクラスにおける `private` と `#` プライベートフィールドの違いは？",
     choices: [
@@ -517,8 +517,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "class-002",
-    difficulty: "medium",
     category: "classes",
+    difficulty: "medium",
     prompt:
       "`constructor(public readonly id: number) {}` の意味として正しいのは？",
     choices: [
@@ -533,8 +533,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "class-003",
-    difficulty: "medium",
     category: "classes",
+    difficulty: "medium",
     prompt:
       "`abstract class` の特徴として正しいのは？",
     choices: [
@@ -549,8 +549,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "class-004",
-    difficulty: "medium",
     category: "classes",
+    difficulty: "medium",
     prompt:
       "`class Dog implements Animal {}` の `implements` の意味は？",
     choices: [
@@ -565,8 +565,8 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: "class-005",
-    difficulty: "medium",
     category: "classes",
+    difficulty: "medium",
     prompt:
       "クラスのアクセス修飾子で「派生クラスからは見えるが外部からは見えない」のは？",
     choices: ["protected", "private", "public", "readonly"],
@@ -577,289 +577,344 @@ export const QUESTIONS: readonly Question[] = [
 
   {
     id: "basic-007",
-    difficulty: "easy",
     category: "basic",
-    prompt: "`bigint` 型の説明として正しいのは？",
+    difficulty: "easy",
+    prompt:
+      "`enum Color { Red, Green }` と `const Color = { Red: 'Red', Green: 'Green' } as const` の違いとして正しいのは？",
     choices: [
-      "任意精度の整数を表す型で、リテラルは `123n` のように末尾に n を付ける",
-      "number の別名",
-      "巨大な小数を扱う型",
-      "Date の代わりに使う型",
+      "enum はコンパイル後に実行時オブジェクトを生成し、`as const` オブジェクトは型をリテラル値に固定するだけで実行時の構造はオブジェクトリテラルのまま",
+      "両者は完全に同義で、実行時の挙動も同じ",
+      "`as const` の方がツリーシェイクされず常にバンドルに残る",
+      "enum はコンパイル時に消える型のみで、実行時には何も残らない",
     ],
     answerIndex: 0,
     explanation:
-      "`bigint` は `Number.MAX_SAFE_INTEGER` を超える整数を扱う型で、リテラルは末尾 `n` を付けます (`123n`)。number と直接演算はできません。",
+      "数値 enum は逆引きマップ付きの実行時オブジェクトを生成しますが、`as const` オブジェクトは普通のオブジェクトリテラルにリテラル型を付けただけです。最近は `as const` の方が好まれることも多いです。",
   },
   {
     id: "basic-008",
-    difficulty: "medium",
     category: "basic",
-    prompt: "`enum Color { Red, Green, Blue }` と `as const` を使った定数オブジェクトの主な違いは？",
+    difficulty: "medium",
+    prompt:
+      "`symbol` 型の説明として正しいのはどれですか？",
     choices: [
-      "enum はランタイム JS にコードが残るが、`as const` のオブジェクトは型情報以上の出力が増えない",
-      "enum はリテラル型を作れない",
-      "as const は実行時にエラーになる",
-      "両者は完全に同じ",
+      "`Symbol()` で作られる一意な値の型で、リテラル相当の型を扱うには `unique symbol` を使う",
+      "`symbol` 型のリテラルは存在しないので、必ず any として扱われる",
+      "`symbol` は string のサブタイプで自動的に変換される",
+      "`Symbol()` の戻り値は string 型である",
     ],
     answerIndex: 0,
     explanation:
-      "TypeScript ハンドブックは多くのケースで enum より `as const` オブジェクト + キーのユニオン型を推奨しています。出力 JS が増えず Tree-shaking しやすいためです。",
+      "`Symbol()` で生成される値は一意で、型は `symbol`。`const s: unique symbol = Symbol()` のようにすると、その値固有の `unique symbol` 型として扱えます。",
   },
   {
     id: "basic-009",
-    difficulty: "hard",
     category: "basic",
-    prompt: "`symbol` 型と `unique symbol` の違いは？",
+    difficulty: "easy",
+    prompt:
+      "`bigint` と `number` の違いとして正しいのはどれですか？",
     choices: [
-      "`unique symbol` は特定のシンボル値1つだけを表す名義型 (nominal-like)",
-      "両者は完全に同じ",
-      "`unique symbol` は number のサブタイプ",
-      "`symbol` はクラスでしか使えない",
+      "`bigint` は任意精度整数を扱う型で、`number` と直接演算できない（混在は型エラー）",
+      "`bigint` は `number` のサブタイプで自由に混ぜて演算できる",
+      "`bigint` は浮動小数を含めた精度を保証する",
+      "`bigint` は実行時には存在しない、型だけの存在である",
     ],
     answerIndex: 0,
     explanation:
-      "`const k: unique symbol = Symbol()` のように `const`/`readonly static` プロパティに付与でき、その値固有の型として使えます。インデックスシグネチャや型レベル区別に有用です。",
+      "`bigint` は ES2020 で追加された任意精度整数型。`1n + 1` のような `number` との直接演算は型エラー（実行時もエラー）になります。",
   },
 
   {
     id: "iface-006",
-    difficulty: "medium",
     category: "interface",
-    prompt: "interface の継承構文として正しいのは？",
+    difficulty: "easy",
+    prompt:
+      "`interface Dog extends Animal, HasName {}` のようにインタフェースを継承する記法の説明として正しいのは？",
     choices: [
-      "interface Dog extends Animal { ... }",
-      "interface Dog : Animal { ... }",
-      "interface Dog implements Animal { ... }",
-      "interface Dog inherits Animal { ... }",
+      "複数の interface を `extends` でまとめて継承し、メンバーが結合された新しい型になる",
+      "クラスのみで使え、interface 同士の継承はできない",
+      "継承元のメンバーは optional になる",
+      "extends は1つしか書けない",
     ],
     answerIndex: 0,
     explanation:
-      "interface 同士の継承は `extends`。複数継承 (`extends A, B`) もできます。クラスでの「実装」は `implements` です。",
+      "interface は複数 interface を `extends` で継承可能で、メンバーが合成された型になります。同名メンバーの型が衝突すれば型エラーです。",
   },
   {
     id: "iface-007",
-    difficulty: "medium",
     category: "interface",
-    prompt: "`interface Dict { [key: string]: number }` のインデックスシグネチャの意味は？",
+    difficulty: "medium",
+    prompt:
+      "`interface Config { readonly tags: readonly string[] }` の `readonly string[]` の意味は？",
     choices: [
-      "任意の string キーで number 値を持つことを表す",
-      "key プロパティが string で、値は number",
-      "1つだけプロパティを持つ",
-      "プロパティを禁止する",
+      "配列要素の追加・変更・削除（push, splice, インデックス代入など）が型レベルで禁止される",
+      "配列の中身が実行時に Object.freeze される",
+      "配列の長さが固定される（タプル化される）",
+      "配列要素のみが readonly になり、配列自体は変更可能",
     ],
     answerIndex: 0,
     explanation:
-      "インデックスシグネチャ `[key: K]: V` は、K 型の任意のキーで V 型の値を持つことを示します。明示プロパティもインデックス型と互換でなければなりません。",
+      "`readonly T[]` は `ReadonlyArray<T>` の糖衣で、push や splice、インデックス代入などミューテーション系メソッドが型から取り除かれます。実行時には普通の配列です。",
   },
   {
     id: "iface-008",
-    difficulty: "hard",
     category: "interface",
-    prompt: "メソッド短縮記法 `m(x: A): B` と関数プロパティ `m: (x: A) => B` の違いとして正しいのは？",
+    difficulty: "medium",
+    prompt:
+      "`interface Callable { (x: number): string }` のような呼び出しシグネチャを持つ interface の意味は？",
     choices: [
-      "`strictFunctionTypes` 下で関数プロパティの引数は反変、メソッド短縮は双変扱いになることがある",
-      "両者は完全に同じ",
-      "メソッド短縮は this を使えない",
-      "関数プロパティは override できない",
+      "そのインタフェース型の値は関数として呼び出せ、(x: number) => string と同等の呼び出し可能型を表す",
+      "`new` でしかインスタンス化できないコンストラクタ型を表す",
+      "interface 内に関数 `Callable` を実装する宣言である",
+      "実行時に関数オブジェクトを生成する宣言である",
     ],
     answerIndex: 0,
     explanation:
-      "歴史的経緯でメソッド短縮の引数は双変 (bivariant) チェックされることがあり、関数プロパティの方が厳密です。安全側を取るなら関数プロパティを使うとよいでしょう。",
+      "プロパティ名のないシグネチャは呼び出しシグネチャで、その型の値が関数として使えることを示します。プロパティと併記すれば「呼べてプロパティも持つ」関数型を表現できます。",
   },
 
   {
     id: "gen-006",
-    difficulty: "medium",
     category: "generics",
-    prompt: "`type Box<T = string> = { value: T }` のデフォルト型パラメータの意味は？",
+    difficulty: "medium",
+    prompt:
+      "`type Box<T> = { value: T }` のようなジェネリック型エイリアスについて正しいのは？",
     choices: [
-      "`Box` のように型引数を省略すると T が string になる",
-      "T を string に強制する",
-      "T が省略不能になる",
-      "コンパイルエラー",
+      "interface と異なり、ユニオン型・条件型・タプルなど任意の型を右辺に書けるジェネリック型を作れる",
+      "ジェネリック型エイリアスは interface と完全に同じで、宣言マージも可能",
+      "型エイリアスにジェネリクスは使えない",
+      "実行時に Box クラスが生成される",
     ],
     answerIndex: 0,
     explanation:
-      "ジェネリクスはデフォルト型パラメータを取れます (`T = Default`)。省略時のフォールバックとして使えます。",
+      "型エイリアスはあらゆる型の別名にジェネリクスを付けられる柔軟な仕組みです。interface と違い宣言マージはできませんが、ユニオンや条件型を扱えます。",
   },
   {
     id: "gen-007",
-    difficulty: "hard",
     category: "generics",
-    prompt: "`function map<T, U>(xs: T[], f: (x: T) => U): U[]` の `map(['a','b'], s => s.length)` で推論される U は？",
-    choices: ["number", "string", "any", "unknown"],
-    answerIndex: 0,
-    explanation:
-      "T は string、関数の戻り値 `s.length` は number となるので U は number に推論されます。結果は `number[]`。",
-  },
-  {
-    id: "gen-008",
     difficulty: "hard",
-    category: "generics",
-    prompt: "ジェネリック型の **共変・反変** に関して正しいのは？",
+    prompt:
+      "TypeScript の関数型における引数の変位について、`strictFunctionTypes` 有効下で正しいのはどれですか？",
     choices: [
-      "関数の引数位置は反変、戻り値位置は共変として扱われる",
-      "全ての位置で共変",
-      "全ての位置で反変",
-      "ジェネリックは常に不変",
+      "関数プロパティ形式の引数は反変（contravariant）にチェックされ、より広い型を受け取る関数は狭い型を期待する場所に代入できる",
+      "関数の引数は常に共変（covariant）として扱われる",
+      "関数の戻り値は反変、引数は共変として扱われる",
+      "`strictFunctionTypes` は引数を不変（invariant）にする",
     ],
     answerIndex: 0,
     explanation:
-      "標準的な変位則です。配列やプロパティは原則共変、関数引数は反変です（ただし TS は実用上の妥協で双変扱いも）。",
+      "関数の戻り値は共変、引数は反変が安全です。`strictFunctionTypes` を有効にすると関数プロパティ形式は反変になります（メソッド短縮記法は互換性のためバイバリアントのまま）。",
+  },
+  {
+    id: "gen-008",
+    category: "generics",
+    difficulty: "hard",
+    prompt:
+      "`type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> }` のような再帰的なジェネリック型の説明として正しいのは？",
+    choices: [
+      "Mapped Type の中で自分自身を参照することで、ネストしたオブジェクト全体に readonly を伝播できる",
+      "TypeScript は再帰的な型エイリアスをサポートしないため、コンパイルエラーになる",
+      "実行時に Object.freeze が再帰的に呼ばれる",
+      "プリミティブ型もすべてオブジェクト化される",
+    ],
+    answerIndex: 0,
+    explanation:
+      "型エイリアスは Mapped Type の中などで再帰参照可能で、ネストした構造を再帰的に変換できます。プリミティブはそのままで、オブジェクト型のみ深く readonly になります。",
   },
 
   {
     id: "util-007",
-    difficulty: "medium",
     category: "utility",
-    prompt: "`Record<K, V>` の例として正しいのは？",
+    difficulty: "medium",
+    prompt:
+      "`Awaited<T>` の説明として正しいのはどれですか？",
     choices: [
-      "`Record<'a' | 'b', number>` は `{ a: number; b: number }`",
-      "`Record<K, V>` は配列を作る",
-      "`Record<K, V>` はクラス定義",
-      "`Record` はオブジェクトを凍結する",
+      "Promise のチェーンを再帰的に剥がし、最終的に解決される値の型を取り出す",
+      "Promise を実行時に await する関数",
+      "T を必ず Promise<T> でラップする型",
+      "T が Promise でなければ never になる",
     ],
     answerIndex: 0,
     explanation:
-      "`Record<K, V>` は K のすべてのキーで値の型 V を持つオブジェクト型を作ります。`Record<string, V>` はインデックスシグネチャ的にも使えます。",
+      "`Awaited<Promise<Promise<number>>>` は number になります。`async` 関数の戻り型推論にも内部的に使われています。",
   },
   {
     id: "util-008",
-    difficulty: "medium",
     category: "utility",
-    prompt: "`NonNullable<T>` の効果は？",
+    difficulty: "medium",
+    prompt:
+      "`function add(a: number, b: number): number { return a + b }` に対し、`Parameters<typeof add>` は何になりますか？",
     choices: [
-      "T から null と undefined を除外する",
-      "T に null を追加する",
-      "T を必須化する",
-      "T を凍結する",
+      "[a: number, b: number]",
+      "{ a: number; b: number }",
+      "number",
+      "(a: number, b: number) => number",
     ],
     answerIndex: 0,
     explanation:
-      "`NonNullable<T>` は `T extends null | undefined ? never : T` 相当で、Nullish を取り除きます。",
+      "`Parameters<T>` は関数型の引数をタプル型として返します。ラベル付きタプルとして引数名も保持されます。",
   },
   {
     id: "util-009",
-    difficulty: "hard",
     category: "utility",
-    prompt: "`Awaited<T>` の役割は？",
+    difficulty: "medium",
+    prompt:
+      "`Extract<T, U>` と `Exclude<T, U>` の関係として正しいのは？",
     choices: [
-      "再帰的に Promise の中身を取り出した型を返す",
-      "Promise を作る",
-      "async 関数の引数型を取る",
-      "T を null 許容にする",
+      "Extract は T のうち U に代入可能なメンバーだけを取り出し、Exclude はそれを除外する",
+      "両者は同義で、引数の順序だけが違う",
+      "Extract は配列専用、Exclude はオブジェクト専用",
+      "Exclude は null と undefined を除去する（NonNullable と同じ）",
     ],
     answerIndex: 0,
     explanation:
-      "`Awaited<Promise<Promise<string>>>` は `string` になります。`async`/`await` の戻り値推論にも内部で使われています。",
+      "`Extract<'a' | 'b' | 1, string>` は `'a' | 'b'`、`Exclude<'a' | 'b' | 1, string>` は `1` になります。条件型のユニオン分配を利用した型です。",
   },
 
   {
     id: "adv-008",
-    difficulty: "hard",
     category: "advanced",
+    difficulty: "hard",
     prompt:
-      "Mapped Type のキー再マッピング `{ [K in keyof T as `get${Capitalize<K & string>}`]: () => T[K] }` の役割は？",
+      "`type JSONValue = string | number | boolean | null | JSONValue[] | { [k: string]: JSONValue }` のような再帰型の説明として正しいのは？",
     choices: [
-      "プロパティ名を変換しながらメソッド型を生成する（例: name → getName）",
-      "プロパティを削除する",
-      "値を Capitalize する",
-      "オブジェクトを凍結する",
+      "型エイリアスは自身を参照する再帰型を定義でき、JSON のような任意深さの構造を表現できる",
+      "型エイリアス内で自身を参照すると常にコンパイルエラーになる",
+      "再帰参照には必ず `infer` が必要",
+      "再帰型はクラスでしか定義できない",
     ],
     answerIndex: 0,
     explanation:
-      "`as` 句でキーを再マップでき、Template Literal Types や `Capitalize` と組み合わせて Getter 型などを動的生成できます。",
+      "型エイリアスはオブジェクト型・配列型などの「コンストラクタ位置」で自身を参照可能です。これによって木構造や JSON のような再帰的な型を素直に書けます。",
   },
   {
     id: "adv-009",
-    difficulty: "hard",
     category: "advanced",
-    prompt: "再帰的な型エイリアス例 `type Json = string | number | boolean | null | Json[] | { [k: string]: Json }` の説明として正しいのは？",
+    difficulty: "hard",
+    prompt:
+      "Mapped Type の `as` 句（key remapping）の役割として正しいのは？",
     choices: [
-      "型エイリアスは自身を参照可能で、再帰的なツリー構造を表現できる",
-      "再帰参照はできず常にエラー",
-      "interface でしか書けない",
-      "実行時に展開される",
+      "`[K in keyof T as NewKey]` の形でキー名を変換でき、never を返したキーを除外することもできる",
+      "値の型を別の型にキャストする（`as` キャストと同じ）",
+      "プロパティを readonly にする修飾子",
+      "Mapped Type を interface に変換する",
     ],
     answerIndex: 0,
     explanation:
-      "TS は型エイリアスの再帰参照を許容しています（直接的な無限ループ条件型は制限あり）。JSON 値や AST のような再帰構造を素直に書けます。",
+      "TS 4.1 で導入された key remapping により、テンプレートリテラル型と組み合わせて `getXxx` のようなキー変換や、never を返してキーを除外する処理が型レベルで書けます。",
+  },
+  {
+    id: "adv-010",
+    category: "advanced",
+    difficulty: "hard",
+    prompt:
+      "Discriminated Union の網羅性チェックを `never` で行う典型的な実装として正しいのは？",
+    choices: [
+      "`switch` の `default` で `const _exhaustive: never = shape;` のように never に代入し、新しいケース追加時に型エラーで漏れを検出する",
+      "`if (typeof shape === 'never')` で判定する",
+      "`as never` で強制キャストし、ランタイムでエラーを投げる",
+      "`Exclude<Shape, never>` を使う",
+    ],
+    answerIndex: 0,
+    explanation:
+      "全ケースを処理し終えた位置では値の型は never に絞り込まれます。そこへ never 変数として代入することで、追加ケースを処理し忘れたときにコンパイル時に検出できます。",
   },
 
   {
     id: "narrow-006",
-    difficulty: "hard",
     category: "narrowing",
-    prompt: "`function assert(c: unknown): asserts c { if (!c) throw new Error() }` のアサーション関数の効果は？",
+    difficulty: "hard",
+    prompt:
+      "`function assertIsString(x: unknown): asserts x is string { if (typeof x !== 'string') throw new Error() }` の `asserts x is string` の意味は？",
     choices: [
-      "呼び出し以降のスコープで条件が真であることをコンパイラに伝え、絞り込みを有効にする",
-      "実行時のエラーを抑制する",
-      "型注釈を消す",
-      "any にキャストする",
+      "関数が正常に return したら、呼び出し元で x が string であることをコンパイラに伝えるアサーション関数の宣言",
+      "実行時に x の型を string に変換する",
+      "x が string でなければ常に false を返す型述語",
+      "関数の戻り値型を string にする糖衣構文",
     ],
     answerIndex: 0,
     explanation:
-      "`asserts c` 述語により、`assert(x)` を通過した後のコードでは x が truthy として扱われます。`asserts x is T` 形式で型まで絞れます。",
+      "アサーション関数（assertion function）は、return すれば条件を満たすことが保証される、という形で呼び出し元の型を絞り込みます。例外を投げて return しない実装が必須です。",
   },
   {
     id: "narrow-007",
-    difficulty: "medium",
     category: "narrowing",
-    prompt: "`x?: string` を確実に string に絞る最も簡単なチェックは？",
+    difficulty: "medium",
+    prompt:
+      "`const x = Math.random() > 0.5 ? 'a' : 'b'` で推論される `x` の型として正しいのはどれですか？",
     choices: [
-      "if (x !== undefined) { /* ここで x: string */ }",
-      "if (x) のみで OK（空文字列でも true）",
-      "as string でキャスト",
-      "x ?? '' を使うが型は string | undefined のまま",
+      "'a' | 'b'",
+      "string",
+      "'a'",
+      "boolean",
     ],
     answerIndex: 0,
     explanation:
-      "`x !== undefined` で確実に string に絞れます。`if (x)` だと空文字列の場合 false になるため意図と違うことがあります。",
+      "`const` 宣言かつ条件式の各分岐がリテラルなので、制御フロー解析と const のリテラル保持により `'a' | 'b'` のユニオンリテラル型になります。`let` だと string にウィッデンされます。",
+  },
+  {
+    id: "narrow-008",
+    category: "narrowing",
+    difficulty: "medium",
+    prompt:
+      "`x: { kind: 'a'; v: number } | { kind: 'b'; v: string }` を `kind` で絞り込むとき、最も適切なのは？",
+    choices: [
+      "`if (x.kind === 'a') { /* x.v は number */ }` のように判別タグの等価チェックを使う",
+      "`if (x instanceof Object)` で絞り込む",
+      "`if ('v' in x)` で絞り込む",
+      "`as` で型をキャストする",
+    ],
+    answerIndex: 0,
+    explanation:
+      "Discriminated Union ではリテラルタグの等価チェックが最も自然で安全な絞り込み方法です。`v` は両者にあるため `in` では絞り込めず、`instanceof` はクラスでしか有効に働きません。",
   },
 
   {
     id: "class-006",
-    difficulty: "easy",
     category: "classes",
-    prompt: "`static` メンバーの説明として正しいのは？",
+    difficulty: "easy",
+    prompt:
+      "`class Counter { static count = 0; static inc() { Counter.count++ } }` の `static` メンバーの説明として正しいのは？",
     choices: [
-      "クラスのインスタンスではなく、クラス自体に属する",
-      "private と同義",
-      "実行時に存在しない",
-      "サブクラスでは継承されない",
+      "クラス自身に紐づくプロパティ・メソッドで、インスタンスを生成しなくても `Counter.count` のようにアクセスできる",
+      "インスタンスごとに別々の値を持つプロパティを宣言する",
+      "実行時に1回だけ評価される定数を宣言する修飾子",
+      "private と同義で、クラス外部から見えなくなる",
     ],
     answerIndex: 0,
     explanation:
-      "`static` プロパティ/メソッドはクラスそのものから `ClassName.member` で参照します。サブクラスにも継承されます。",
+      "static メンバーはクラス（コンストラクタ関数）側に直接生えます。インスタンスからは this 経由ではアクセスできず、クラス名から呼び出します。",
   },
   {
     id: "class-007",
-    difficulty: "medium",
     category: "classes",
-    prompt: "`get` / `set` アクセサに関して正しいのは？",
+    difficulty: "medium",
+    prompt:
+      "`class Temperature { #c = 0; get celsius() { return this.#c } set celsius(v: number) { if (v < -273.15) throw new Error(); this.#c = v } }` の getter/setter の説明として正しいのは？",
     choices: [
-      "外部からはプロパティとして見えるが、内部でロジックを実行できる",
-      "実行時に呼ばれない",
-      "abstract と同義",
-      "static でしか使えない",
+      "`obj.celsius` の読み取り・代入時に getter / setter が呼ばれ、プロパティアクセスの文法で計算やバリデーションを挟める",
+      "getter/setter はメソッドと同じで、`obj.celsius()` のように `()` を付けて呼び出す",
+      "TypeScript では getter/setter はサポートされていない",
+      "setter は必ず void を返さなければならず、引数の型は string に固定される",
     ],
     answerIndex: 0,
     explanation:
-      "`get name() {...}` はプロパティアクセス時に呼ばれ、`set name(v) {...}` は代入時に呼ばれます。バリデーションや派生値に便利です。",
+      "ECMAScript の getter/setter は `obj.celsius = 10` のような代入で setter が呼ばれます。TypeScript では setter の引数型と getter の戻り値型が一致している必要があります。",
   },
   {
     id: "class-008",
-    difficulty: "medium",
     category: "classes",
-    prompt: "クラスフィールドの初期化順序として正しいのは？",
+    difficulty: "hard",
+    prompt:
+      "`class Bag { [key: string]: number; size = 0 }` のクラスにおけるインデックスシグネチャの制約として正しいのは？",
     choices: [
-      "親クラスのコンストラクタ → 子のフィールド初期化 → 子のコンストラクタ本体",
-      "子のフィールド → 子のコンストラクタ → 親のコンストラクタ",
-      "全て同時に実行される",
-      "順序は実装依存",
+      "宣言する全ての具体的なプロパティ（ここでは `size`）の型は、インデックスシグネチャの値型（ここでは number）に代入可能でなければならない",
+      "クラスではインデックスシグネチャを宣言できない",
+      "インデックスシグネチャは static メンバーにしか付けられない",
+      "インデックスシグネチャを書くと具体的なプロパティは一切宣言できなくなる",
     ],
     answerIndex: 0,
     explanation:
-      "`super()` 呼び出しで親が初期化され、その後に子のフィールド初期化子が動き、最後に子のコンストラクタ本体が実行されます。`super` 呼び出し前に `this` を触るとエラーです。",
+      "interface と同じく、クラスでもインデックスシグネチャと具体的プロパティを併記する場合、後者の型はインデックス値型のサブタイプである必要があります。`size: string` だとエラーになります。",
   },
 ];
