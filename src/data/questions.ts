@@ -1,4 +1,4 @@
-import type { Question } from "../types/index.js";
+import type { Question } from "../types";
 
 export const QUESTIONS: readonly Question[] = [
   {

@@ -2,21 +2,23 @@
   "name": "typescript-study",
   "version": "0.1.0",
   "private": true,
-  "description": "Interactive CLI quiz app for learning TypeScript",
+  "description": "Interactive web quiz app for learning TypeScript (PWA)",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsc --watch",
-    "typecheck": "tsc --noEmit",
-    "test": "node --test --import tsx test"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit"
   },
-  "engines": {
-    "node": ">=18"
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
-    "tsx": "^4.7.0",
-    "typescript": "^5.4.0"
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.1"
   }
 }
