@@ -18,7 +18,7 @@ export const QUESTIONS: readonly Question[] = [
     prompt: "any と unknown の違いとして正しいのはどれですか？",
     choices: [
       "any は型チェックを抑制するが、unknown は使用前に型の絞り込みが必要",
-      "unknown は実行時エラーを防ぐ特殊型で、any より遅い",
+      "unknown はあらゆる値を代入可能だが、unknown 型のままプロパティアクセスや関数呼び出しを行うと型エラーになる（any はならない）",
       "両者は完全に同義",
       "unknown は never のエイリアス",
     ],
@@ -64,13 +64,13 @@ export const QUESTIONS: readonly Question[] = [
     prompt: "interface と type alias の違いとして正しいのはどれ？",
     choices: [
       "interface は宣言マージ可能だが type alias は不可",
-      "type alias はクラスで実装できない",
-      "interface はユニオン型を定義できる",
+      "type alias は構造的部分型に従わない",
+      "interface はユニオン型を直接定義できる",
       "両者は完全に同じ",
     ],
     answerIndex: 0,
     explanation:
-      "同名 interface は宣言マージされます。type alias はマージできず、ユニオンや条件型は type のみ表現可能です。",
+      "同名 interface は宣言マージされます。type alias はマージできず、ユニオンや条件型は type のみで表現可能です。なおオブジェクト型に評価される type alias であれば `class C implements MyType {}` のように implements は可能です。",
   },
   {
     id: "iface-002",
@@ -197,7 +197,7 @@ export const QUESTIONS: readonly Question[] = [
       "T を凍結する",
     ],
     answerIndex: 0,
-    explanation: "`?` を全て外して必須化します。逆は Partial<T>。",
+    explanation: "`{ [P in keyof T]-?: T[P] }` の `-?` で `?` を外して必須化し、同時に値型から `undefined` も取り除きます（例: `{ x?: number | undefined }` → `{ x: number }`）。逆は Partial<T>。",
   },
 
   {
@@ -294,7 +294,7 @@ export const QUESTIONS: readonly Question[] = [
     choices: [
       "タプルは要素数と各位置の型が固定、ユニオン配列は順序や個数が自由",
       "両者は完全に同じ",
-      "タプルは実行時に長さが変えられない",
+      "タプルは `(string | number)[]` のサブタイプであり、暗黙の代入が常に可能",
       "ユニオン配列の方がメモリ効率が良い",
     ],
     answerIndex: 0,
@@ -496,7 +496,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "等価/不等価チェック（`!== null`、truthiness）も TS の絞り込み対象です。`x: string | null | undefined` のように両方を含む型を一度に除外したい場合は `if (x != null)` も便利です。",
+      "`!== null` は null のみを除外し string が残ります。truthiness (`if (x)`) も undefined/null を除外しますが、こちらは型が単なる `string` の場合に空文字 `\"\"` を型レベルで除けない点に注意。`x: string | null | undefined` のように両方を含む型を一度に除外したい場合は `if (x != null)` が便利です。",
   },
 
   {
@@ -582,14 +582,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`enum Color { Red, Green }` と `const Color = { Red: 'Red', Green: 'Green' } as const` の違いとして正しいのは？",
     choices: [
-      "enum はコンパイル後に実行時オブジェクトを生成し、`as const` オブジェクトは型をリテラル値に固定するだけで実行時の構造はオブジェクトリテラルのまま",
+      "（非 const の）enum はコンパイル後に実行時オブジェクトを生成し、`as const` オブジェクトは型をリテラル値に固定するだけで実行時の構造はオブジェクトリテラルのまま",
       "両者は完全に同義で、実行時の挙動も同じ",
       "`as const` の方がツリーシェイクされず常にバンドルに残る",
       "enum はコンパイル時に消える型のみで、実行時には何も残らない",
     ],
     answerIndex: 0,
     explanation:
-      "数値 enum は逆引きマップ付きの実行時オブジェクトを生成しますが、`as const` オブジェクトは普通のオブジェクトリテラルにリテラル型を付けただけです。最近は `as const` の方が好まれることも多いです。",
+      "数値 enum は逆引きマップ付きの実行時オブジェクトを生成しますが、`as const` オブジェクトは普通のオブジェクトリテラルにリテラル型を付けただけです。なお `const enum` はインライン展開されて実行時には何も残らないため、選択肢 D が当てはまります。最近は型と値を分けやすい `as const` が好まれることも多いです。",
   },
   {
     id: "basic-008",
@@ -719,7 +719,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "型エイリアスは Mapped Type の中などで再帰参照可能で、ネストした構造を再帰的に変換できます。プリミティブはそのままで、オブジェクト型のみ深く readonly になります。",
+      "型エイリアスは Mapped Type の中などで再帰参照可能で、ネストした構造を再帰的に変換できます。なおこの定義はプリミティブのガードを持たないため、`DeepReadonly<string>` は `string` のメンバを Mapped 化してしまいます。実用では `T extends Primitive ? T : { readonly [K in keyof T]: DeepReadonly<T[K]> }` のように分岐するのが一般的です。",
   },
 
   {
@@ -883,7 +883,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "static メンバーはクラス（コンストラクタ関数）側に直接生えます。インスタンスからは this 経由ではアクセスできず、クラス名から呼び出します。",
+      "static メンバーはクラス（コンストラクタ関数）側に直接生えます。インスタンス側には生えないため `instance.count` のようなアクセスは型エラー（実行時には undefined）。`Counter.count` のようにクラス名から、または static メソッド内では `this.count` の形でアクセスします。",
   },
   {
     id: "class-007",
@@ -1050,7 +1050,7 @@ export const QUESTIONS: readonly Question[] = [
       "`Array.isArray(value)` で絞り込めるのはどれですか？(value: unknown)",
     choices: [
       "value が配列であることが保証され、`any[]` として扱える",
-      "value が `never[]` に絞り込まれる",
+      "value が `unknown[]` に絞り込まれる",
       "value が tuple であることが保証される",
       "Array.isArray は型ガードとして機能しない",
     ],
@@ -1067,8 +1067,8 @@ export const QUESTIONS: readonly Question[] = [
     choices: [
       "string[]",
       "('a' | 'b')[]",
-      "[keyof typeof obj]",
-      "readonly ('a' | 'b')[]",
+      "(keyof typeof obj)[]",
+      "readonly string[]",
     ],
     answerIndex: 0,
     explanation:
@@ -1152,7 +1152,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "WeakMap は弱参照のためキャッシュやプライベートデータの紐付けに向きます。列挙不能で size もありません。TS 5.2 以降はオブジェクトに加えて Symbol もキーに使えます（ただし `Symbol.for` で取得した登録済みシンボルは除く）。",
+      "WeakMap は弱参照のためキャッシュやプライベートデータの紐付けに向きます。列挙不能で size もありません。ES2023 でオブジェクトに加えて（`Symbol.for` で登録された登録済みでない）Symbol もキーに使えるようになり、TypeScript 側は `lib: \"es2023\"` を含めれば型として認識されます。",
   },
   {
     id: "basic-025",
@@ -1248,7 +1248,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`Array#forEach` のコールバック型が `(v: T) => void` でも `arr.forEach(v => arr2.push(v))` が許されるのはこの仕様のためです。逆に変数宣言で `let f: () => void = () => 1` の戻り値を呼び出し側で使うと undefined 扱いになります。",
+      "`Array#forEach` のコールバック型が `(v: T) => void` でも `arr.forEach(v => arr2.push(v))` が許されるのはこの仕様のためです。逆に変数宣言で `let f: () => void = () => 1` とした場合、`f()` の戻り値の型は `void` になり、その値を使った計算は型エラーになります（実行時の値は 1 ですが、型上は使えません）。",
   },
   {
     id: "basic-031",
@@ -1321,14 +1321,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "タプル型 `[string, number?]` の意味として正しいのは？",
     choices: [
-      "長さ 1 か 2 のタプルで、2 番目の要素は number または undefined（実質的に省略可能）",
+      "長さ 1 か 2 のタプルで、2 番目の要素は省略可能（インデックスアクセス時の型は通常 `number | undefined`）",
       "2 要素のタプルで、両方とも optional",
       "string と number のユニオン配列",
       "タプル中の `?` は型エラー",
     ],
     answerIndex: 0,
     explanation:
-      "タプル末尾の optional 要素は長さの違いを許容します。optional 要素の後に必須要素は書けない制約があります。",
+      "タプル末尾の optional 要素は長さの違いを許容します（`['a']` も `['a', 1]` も可）。optional 要素の後に必須要素は書けない制約があります。なお `tuple[1]` の型は通常 `number | undefined`（`exactOptionalPropertyTypes` が有効でも tuple では undefined を含む推論が一般的）。",
   },
   {
     id: "basic-036",
@@ -1392,7 +1392,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`typeof obj` を型位置で使うと、`obj` の推論型が得られます。`typeof fn`、`(typeof obj)[K]` のようにクラス・関数・定数オブジェクトから型を生成するイディオムは頻出です。",
+      "`typeof obj` を型位置で使うと、`obj` の推論型が得られます。`typeof fn` で関数型を、`(typeof obj)[keyof typeof obj]` で値ユニオンを取り出す、のようにクラス・関数・定数オブジェクトから型を生成するイディオムが頻出です。",
   },
   {
     id: "basic-040",
@@ -1513,14 +1513,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`@ts-ignore` と `@ts-expect-error` の違いとして正しいのは？",
     choices: [
-      "`@ts-expect-error` は次の行にエラーが存在しない場合に逆に警告を出すが、`@ts-ignore` は単にエラーを抑制する",
+      "`@ts-expect-error` は次の行にエラーが存在しない場合に逆にエラーを出す（`Unused '@ts-expect-error' directive`）が、`@ts-ignore` は黙ってエラーを抑制するだけ",
       "両者は完全に同じ",
       "`@ts-ignore` だけが TypeScript 5.0 以降で利用可能",
       "`@ts-expect-error` は実行時エラーを抑制する",
     ],
     answerIndex: 0,
     explanation:
-      "意図的にエラーを期待する場合は `@ts-expect-error` の方が安全です。後でコードが直ったら期待が外れて警告が出るので、抑制コメントが残り続ける問題を防げます。",
+      "意図的にエラーを期待する場合は `@ts-expect-error` の方が安全です。後でコードが直ると期待が外れて未使用ディレクティブのエラーが出るため、抑制コメントが残り続ける問題を防げます。",
   },
   {
     id: "basic-048",
@@ -1586,7 +1586,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "複数 interface を `extends` する場合、同名メンバの型が衝突するとコンパイルエラーです。互換（一方が他方のサブタイプ）であれば狭い方に統一されます。値レベルのオーバーロード解決とは異なる挙動なので注意。",
+      "複数 interface を `extends` する場合、同名メンバの型が衝突するとコンパイルエラーで宣言時に検出されます。互換（一方が他方のサブタイプ）であれば狭い方に統一されます。",
   },
   {
     id: "iface-010",
@@ -1792,7 +1792,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "空 interface は `{}` 同様、null/undefined を除く任意の値（プリミティブを含む）を受け付けます。`any` と異なり、許容するだけで型エラーは出ます（プロパティ参照はメソッドのみ可能）。意図しない代入を許してしまうため lint で警告されることが多いです。",
+      "空 interface は `{}` 同様、null/undefined を除く任意の値（プリミティブを含む）を受け付けます。`any` と異なり、Empty 型の値からの任意プロパティアクセスは型エラーとなり、Object.prototype 由来のメソッド呼び出しのみ許されます。意図しない代入を許してしまうため lint で警告されることが多いです。",
   },
   {
     id: "iface-023",
@@ -1856,7 +1856,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "mapped type は型 alias の構文で、interface 本体には書けません。interface で使いたい場合は alias を別途定義し、それがオブジェクト型に評価される場合のみ `interface I extends MappedAlias {}` の形で取り込めます（条件型を含む等で結果がオブジェクト型でない場合は不可）。",
+      "mapped type は型 alias の構文で、interface 本体には書けません。interface で使いたい場合は alias を別途定義し、それを `interface I extends MappedAlias {}` の形で取り込めます。判定基準は **alias の評価結果がオブジェクト型かどうか** だけ。ユニオンや非オブジェクト型に評価される alias は extends できません。",
   },
   {
     id: "iface-027",
@@ -1945,14 +1945,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`interface I { fn(xs: ReadonlyArray<number>): void }` を実装するクラスで、`fn` を関数プロパティ形式 (`fn: (xs: number[]) => void`) で書くか、メソッド短縮記法 (`fn(xs: number[]): void`) で書くかで挙動はどう違いますか？",
     choices: [
-      "関数プロパティ形式では引数は反変なので、より狭い `number[]` への絞り込みは strictFunctionTypes 下でエラー。メソッド短縮記法ならバイバリアントとして許容される",
+      "関数プロパティ形式では引数は反変 (contravariant) なので、より狭い `number[]` への絞り込みは strictFunctionTypes 下でエラー。メソッド短縮記法なら双変 (bivariant) として許容される",
       "常にエラー",
       "常に許される",
       "実行時に変換が走る",
     ],
     answerIndex: 0,
     explanation:
-      "`number[]` は `ReadonlyArray<number>` のサブタイプ（より狭い型）です。関数プロパティ形式は strictFunctionTypes 下で引数を反変（広い方向のみ許容）として扱うため、狭める方向はエラー。メソッド短縮記法はバイバリアントなので許されます。",
+      "`number[]` は `ReadonlyArray<number>` のサブタイプ（より狭い型）です。関数プロパティ形式は strictFunctionTypes 下で引数を反変 (contravariant)（広い方向のみ許容）として扱うため、狭める方向はエラー。メソッド短縮記法は双変 (bivariant) なので許されます。",
   },
   {
     id: "iface-033",
@@ -2144,7 +2144,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "interface はもともと型のみを宣言するため `declare` は実質ノーオペで、書いても害はありませんが慣習的には省略します。.d.ts かどうか、トップレベルかどうかに関わらず挙動は同じです。",
+      "interface はもともと型のみを宣言するため `declare` は実質ノーオペで、書いても害はありませんが慣習的には省略します。なお `declare global { interface ... }` のように使う場合はグローバルへの宣言マージとして特別な意味を持ちます。",
   },
   {
     id: "iface-045",
@@ -2290,7 +2290,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`Promise.resolve<T>(value: T): Promise<T>` のシグネチャから、リテラルは拡大 (widen) されて `Promise<number>` になります。",
+      "TS 4.5 以降の lib.d.ts では `Promise.resolve<T>(value: T): Promise<Awaited<T>>` の形になっています。リテラルは拡大 (widen) されて `T = number` となり、`Awaited<number>` も `number` のままなので戻り値は `Promise<number>` です。",
   },
   {
     id: "gen-017",
@@ -2338,7 +2338,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "rest 引数を `T extends readonly unknown[]` で受けるとタプル型として推論されますが、リテラル値はプリミティブに拡大され、readonly 修飾も付きません。`readonly [1, 'a', true]` を得るには TS 5.0 の const 型パラメータ `<const T extends readonly unknown[]>` か、呼び出し側で `tup(...([1,'a',true] as const))` のように `as const` が必要です。",
+      "rest 引数で **`readonly unknown[]` という制約** が付いているため、TS はタプル型として推論します（制約が無いと plain な `(number|string|boolean)[]` になります）。ただしリテラル値はプリミティブに拡大され、readonly 修飾も付きません。`readonly [1, 'a', true]` を得るには TS 5.0 の const 型パラメータ `<const T extends readonly unknown[]>` か、呼び出し側で `as const` が必要です。",
   },
   {
     id: "gen-020",
@@ -2667,14 +2667,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "``type Path<T> = T extends object ? { [K in keyof T & string]: K | `${K}.${Path<T[K]>}` }[keyof T & string] : never`` のような再帰条件型の主な制限は？",
     choices: [
-      "再帰の深さに上限（おおむね 50 段）があり、深くネストした型や循環構造では `Type instantiation is excessively deep and possibly infinite` エラーになる",
+      "再帰の深さに上限（およそ 50〜100 段、評価方法による）があり、深くネストした型や循環構造では `Type instantiation is excessively deep and possibly infinite` エラーになる",
       "object 型のみで使える",
       "TS 5.4 では一切動かない",
       "K に number 型が含まれない",
     ],
     answerIndex: 0,
     explanation:
-      "条件型の再帰にはインスタンシエーション深度の上限（実装上およそ 50 段）があり、深くネストした構造や循環的な型では `Type instantiation is excessively deep and possibly infinite` エラーになります。回避策として `Prev<N>` のような深さカウンタや、tail-recursion 風のオブジェクト指接 (`{ ...; [K in ...]: ... }['done']`) を使います。",
+      "条件型の再帰にはインスタンシエーション深度の上限（実装上およそ 50〜100 段、tail-recursion か通常再帰かで異なる）があり、深くネストした構造や循環的な型では `Type instantiation is excessively deep and possibly infinite` エラーになります。回避策として `Prev<N>` のような深さカウンタや、tail-recursion 風のオブジェクト間接 (`{ ...; [K in ...]: ... }['done']`) を使います。",
   },
   {
     id: "gen-041",
@@ -2754,7 +2754,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "オーバーロード解決は宣言順に行われ、最初に適合する非ジェネリックなシグネチャ（より具体的）が選ばれます。",
+      "オーバーロード解決は **宣言順に最初に適合するシグネチャ** が選ばれます。具体性で自動的に並び替わるわけではないため、開発者が「より具体的なものを先に、汎用的なものを後に」並べる必要があります。",
   },
 
   // === utility batch ===
@@ -2861,7 +2861,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "`ThisType<T>` は中身を持たないマーカー型で、`& ThisType<T>` のように交差で付与すると、対象オブジェクトリテラル内のメソッドの `this` が `T` として文脈的に推論されます（例: Vue Options API）。`--noImplicitThis` の併用を前提に説明されることが多いですが、フラグの有無に関わらずマーカーとして機能します。",
+      "`ThisType<T>` は中身を持たないマーカー型で、`& ThisType<T>` のように交差で付与すると、対象オブジェクトリテラル内のメソッドの `this` が `T` として文脈的に推論されます（例: Vue Options API）。これが機能するには `--noImplicitThis` が有効である必要があります（無効だと `this` は any として扱われ、ThisType の効果は実質失われます）。",
   },
   {
     id: "util-017",
@@ -3900,7 +3900,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`typeof x === \"function\"` で絞り込まれると、TypeScript は `x` を組み込みの `Function` インターフェースとして扱います。これは `call`/`apply`/`bind`/`length`/`name` などのメソッド・プロパティを持つ広義インターフェースで、呼び出しは `(...args: any[]) => any` 相当の意図的に緩いシグネチャです。引数や戻り値までは推論しません。",
+      "`typeof x === \"function\"` で絞り込まれると、TypeScript は `x` を組み込みの `Function` インターフェースとして扱います。これは `call`/`apply`/`bind`/`length`/`name` などのメンバを持ち、任意の引数で呼び出せるよう型チェッカ側で特別扱いされる型です（引数や戻り値の型情報は失われます）。",
   },
   {
     id: "narrow-010",
@@ -3952,14 +3952,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`n: number | undefined` に対し `if (n) { ... }` の中で `n` の型はどうなりますか？",
     choices: [
-      "`number`（実行時には `0` のときこのブロックに入らないが、型上は `number` のまま）",
+      "`number`",
       "`number | undefined`",
       "`undefined`",
       "`never`",
     ],
     answerIndex: 0,
     explanation:
-      "truthiness 絞り込みは `undefined` を除外するため型上は `number` になります。実行時には `0` も falsy として除外されますが、型システムは「`number` から `0` を除いた型」までは表現せず、ただの `number` として扱います。`0` の場合も処理したいなら `n !== undefined` で絞り込みます。",
+      "truthiness 絞り込みは `undefined` を除外するため型上は `number` になります。実行時には `0` のときこのブロックに入らないものの、型システムは「`number` から `0` を除いた型」までは表現せず、ただの `number` として扱います。`0` の場合も処理したいなら `n !== undefined` で絞り込みます。",
   },
   {
     id: "narrow-014",
@@ -4023,7 +4023,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`instanceof` は派生クラスでも有効で、`a` は `Dog` に絞り込まれます。`Dog` は `Animal` を継承するため `bark()` も含めてアクセスできます。",
+      "`instanceof` は派生クラスでも有効で、`a` は `Dog` に絞り込まれます。`bark()` は `Dog` が定義するメソッドなので、`Dog` に絞り込まれた `a` から安全に呼び出せます。",
   },
   {
     id: "narrow-018",
@@ -4151,7 +4151,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "クロージャ内では関数が後で呼ばれる可能性があるため、TS は外側の絞り込みを保守的に解除し `string | undefined` のまま扱います。`const local = s;` で別変数に束ねるのが定石です。",
+      "パラメータや `let` は再代入の可能性があるため、TS はクロージャ内では外側の絞り込みを保守的に解除し `string | undefined` のまま扱います。回避策は `const local = s;` のように **`const` で別名に束ねる** こと（`const` で再代入されない式は、クロージャ内でも絞り込みが保持されます）。",
   },
   {
     id: "narrow-026",
@@ -4199,7 +4199,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "TS 4.4 以降の別名条件分析（aliased conditions）により、`const c = x.kind` を介した比較でも `x` 自体が絞り込まれます。`x` は `A` に、`x.kind` は `\"a\"` になります。",
+      "TS 4.4 以降の別名条件分析（aliased conditions）により、`const c = x.kind` を介した比較でも `x` 自体が絞り込まれます。`x` は `A` に、`x.kind` は `\"a\"` になります。ただしこの分析は **`const` で束ねた値かつ、判別ユニオンの判別プロパティ** に対してのみ完全に機能します。任意のオブジェクトプロパティを `const` で別名にしても、元のオブジェクトは絞り込まれない場合があります。",
   },
   {
     id: "narrow-029",
@@ -4247,7 +4247,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "`Array.isArray` の型述語は `arg is any[]` ですが、ユニオンの絞り込みでは「配列メンバーのみ残す」効果として働きます。元のユニオンに含まれる `readonly string[]` だけが残るため、ここでは `readonly string[]` に絞り込まれます。",
+      "`Array.isArray` の型述語は `arg is any[]` で、`readonly string[]` を直接 `any[]` にキャストすることはできません（readonly→mutable は不健全）。代わりに TypeScript はユニオンから「配列でないメンバー（ここでは `string`）」を除外する形で絞り込みを行うため、結果として元のユニオンに含まれていた `readonly string[]` がそのまま残ります（モダンな TS 4.x 以降の挙動）。",
   },
   {
     id: "narrow-032",
@@ -4304,7 +4304,7 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`as const` で宣言したオブジェクトの判別ユニオン化について正しいのはどれですか？\n```ts\nconst events = [\n  { kind: \"click\", x: 1 },\n  { kind: \"hover\", target: \"btn\" },\n] as const;\n```",
     choices: [
-      "`as const` により各要素の `kind` がリテラル型になり、要素を判別ユニオンとして扱える",
+      "`as const` により各要素の `kind` がリテラル型になり、`(typeof events)[number]` で取り出せば判別ユニオンとして扱える",
       "`as const` は配列を `readonly` にするだけで、判別ユニオン化には無関係",
       "`as const` を使うと `kind` が `string` に広がる",
       "コンパイルエラーになる",
