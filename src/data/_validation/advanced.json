@@ -1,0 +1,46 @@
+{
+  "category": "advanced",
+  "auditedCount": 51,
+  "issues": [
+    {
+      "id": "adv-048",
+      "severity": "error",
+      "problem": "Explanation reverses the variance/infer rule. It states that `infer` in function-argument positions produces a union ('交差ではなくユニオンになる'), but the actual TypeScript behavior is the opposite: multiple candidates inferred from contravariant (function-parameter) positions are combined as an INTERSECTION, while covariant positions yield a UNION. The chosen answer text itself is acceptable, but the explanation misleads learners about a subtle, exam-relevant rule.",
+      "currentAnswerIndex": 0,
+      "currentAnswerText": "`T extends U ? X : Y` の `T` の位置は基本的に共変だが、関数の引数位置で使うと反変として扱われる",
+      "suggestedFix": "Rewrite the explanation: '関数型の引数は反変位置のため、infer を反変位置（関数引数）で行うと候補は交差 (intersection) として結合され、共変位置では和集合 (union) になります。' Optionally tighten the answer text to make this distinction explicit."
+    },
+    {
+      "id": "adv-012",
+      "severity": "warning",
+      "problem": "The example type given in the prompt is broken as a real `IsUnion`: `[T] extends [infer _] ? false : never` always matches (any single-element tuple satisfies `[infer _]`), so it returns `false` for every input and never returns `true`. A canonical implementation is `T extends any ? ([U] extends [T] ? false : true) : never` (with a copy parameter). The question still works because it asks only about the *purpose* of wrapping with `[T]`, but the snippet does not actually detect unions and may confuse readers.",
+      "currentAnswerIndex": 0,
+      "currentAnswerText": "ユニオン分配を抑制し、`T` を一塊として扱うため",
+      "suggestedFix": "Replace the example with a working IsUnion, e.g. `type IsUnion<T, U = T> = T extends any ? ([U] extends [T] ? false : true) : never`, and keep the same answer/explanation, or reword the prompt to ask abstractly about why `[T] extends [U]` is used (without claiming the snippet implements IsUnion)."
+    },
+    {
+      "id": "adv-029",
+      "severity": "warning",
+      "problem": "The prompt references `Tuple<A>` / `Tuple<B>` as if it were a known helper, but no definition is provided in the question. Learners may not realize this is shorthand for a recursively built tuple of length N (e.g. `BuildTuple<N, R extends unknown[] = []> = R['length'] extends N ? R : BuildTuple<N, [...R, unknown]>`). The conceptual answer is correct, but the prompt is incomplete.",
+      "currentAnswerIndex": 0,
+      "currentAnswerText": "長さ A と B のタプルを連結し、その `length` プロパティから合計長 (= A+B) を読み取る",
+      "suggestedFix": "Add a one-line note defining `Tuple<N>` (e.g. 'ここで Tuple<N> は長さ N の任意要素タプル') so the reader knows the helper is a length-N tuple constructor."
+    },
+    {
+      "id": "adv-023",
+      "severity": "warning",
+      "problem": "The constraint `...infer R extends string[]` is slightly non-idiomatic. The conventional/standard form is `...infer R extends readonly string[]` (matching the outer `readonly string[]`). Some TS versions/configurations may infer R less precisely otherwise. The correct answer 'a-b-c' still holds, but the snippet has a small inconsistency between the outer `readonly string[]` constraint and the inner `string[]` infer constraint.",
+      "currentAnswerIndex": 0,
+      "currentAnswerText": "'a-b-c'",
+      "suggestedFix": "Change `...infer R extends string[]` to `...infer R extends readonly string[]` for consistency with the outer constraint."
+    },
+    {
+      "id": "adv-038",
+      "severity": "warning",
+      "problem": "The example `{ [K in keyof T]: K extends Head ? Set<T[K], Rest, V> : T[K] }` only handles the recursive (non-leaf) case and does not show the base case where `Rest` is empty and the value is replaced by `V`. The answer is conceptually correct (Mapped + 条件型), but the snippet is incomplete and could mislead readers into thinking deep `Set` never assigns `V`.",
+      "currentAnswerIndex": 0,
+      "currentAnswerText": "Mapped Type と条件型の組合せ (`{ [K in keyof T]: K extends Head ? Set<T[K], Rest, V> : T[K] }`)",
+      "suggestedFix": "Either explicitly show a two-arm form like `P extends `${infer Head}.${infer Rest}` ? { [K in keyof T]: K extends Head ? Set<T[K], Rest, V> : T[K] } : { [K in keyof T]: K extends P ? V : T[K] }`, or note in the explanation that the snippet shows only the recursive arm."
+    }
+  ]
+}
