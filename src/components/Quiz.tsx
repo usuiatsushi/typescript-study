@@ -100,7 +100,7 @@ export function Quiz({ category, difficulty, onFinish }: Props) {
             {DIFFICULTY_LABEL[current.difficulty]}
           </span>
         </div>
-        <h2 style={{ marginTop: 8 }}><RichText text={current.prompt} /></h2>
+        <div className="prompt"><RichText text={current.prompt} /></div>
 
         <div className="choices">
           {current.choices.map((c, i) => {
