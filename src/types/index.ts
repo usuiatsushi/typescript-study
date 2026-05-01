@@ -17,9 +17,18 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   classes: "クラス (Classes)",
 };
 
+export type Difficulty = "easy" | "medium" | "hard";
+
+export const DIFFICULTY_LABEL: Record<Difficulty, string> = {
+  easy: "やさしい",
+  medium: "ふつう",
+  hard: "むずかしい",
+};
+
 export interface Question {
   readonly id: string;
   readonly category: Category;
+  readonly difficulty: Difficulty;
   readonly prompt: string;
   readonly choices: readonly string[];
   readonly answerIndex: number;
@@ -36,6 +45,7 @@ export interface SessionResult {
   readonly startedAt: string;
   readonly finishedAt: string;
   readonly category: Category | "all";
+  readonly difficulty: Difficulty | "all";
   readonly total: number;
   readonly correct: number;
   readonly answers: readonly AnswerResult[];
