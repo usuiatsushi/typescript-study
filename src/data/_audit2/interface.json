@@ -1,0 +1,146 @@
+{
+  "category": "interface",
+  "auditedCount": 45,
+  "issues": [
+    {
+      "id": "iface-006",
+      "severity": "warning",
+      "type": "weak-distractor",
+      "problem": "iface-006 と iface-009 が実質的に同じ問題（複数 interface の extends 継承可否）。難易度ラベルだけ medium/easy で異なるが、出題内容と正答ロジックがほぼ重複している。",
+      "currentChoiceTexts": [
+        "A: 複数の interface を `extends` でまとめて継承し、メンバーが結合された新しい型になる",
+        "B: クラスのみで使え、interface 同士の継承はできない",
+        "C: 継承元のメンバーは optional になる",
+        "D: extends は1つしか書けない"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "iface-006 か iface-009 のどちらかを廃止するか、片方を「同名メンバが衝突した場合の挙動」など別の論点に差し替える（iface-033 とも被らないように工夫する）。"
+    },
+    {
+      "id": "iface-005",
+      "severity": "minor",
+      "type": "japanese",
+      "problem": "選択肢 A で「バイバリアント」のみ使用、解説では「バイバリアント（双変）」とカッコ書き。日本語 TS 文献では「双変／反変／共変」と漢字表記が一般的で、用語の不統一がやや読みづらい。",
+      "currentChoiceTexts": [
+        "A: メソッド短縮記法は引数がバイバリアントに緩く扱われ、関数プロパティ形式は strictFunctionTypes 下で引数が反変として厳格にチェックされる",
+        "B: 両者は実行時に異なる挙動になる",
+        "C: メソッド記法は this を持てない",
+        "D: 関数プロパティ形式は呼び出せない"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "選択肢内も「双変（bivariant）」のように漢字＋原語併記に統一する。"
+    },
+    {
+      "id": "iface-024",
+      "severity": "minor",
+      "type": "japanese",
+      "problem": "「流暢 API」は直訳的でやや不自然。実務では「fluent API」「メソッドチェーン API」と表現するのが一般的。",
+      "currentChoiceTexts": [
+        "A: `this` 型（polymorphic this）を返す",
+        "B: `Builder` を返す",
+        "C: `any` を返す",
+        "D: 戻り値を省略する"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "プロンプトを「Builder で `set(...).set(...)` のようなメソッドチェーン（fluent API）を作る」に修正。"
+    },
+    {
+      "id": "iface-024",
+      "severity": "warning",
+      "type": "ambiguity",
+      "problem": "問題文は「有効なのは？」とだけ問うため、選択肢 B「Builder を返す」も文脈次第で動作する（サブクラスで継承しないなら問題ない）。`this` 型の優位性を問う設問だが「有効」では複数解釈が成立する。",
+      "currentChoiceTexts": [
+        "A: `this` 型（polymorphic this）を返す",
+        "B: `Builder` を返す",
+        "C: `any` を返す",
+        "D: 戻り値を省略する"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "プロンプトを「サブクラスでも自身の型でチェーンを継続できる、最も適切な戻り値型は？」のように限定する。"
+    },
+    {
+      "id": "iface-026",
+      "severity": "warning",
+      "type": "explanation",
+      "problem": "解説は「alias を作って `extends` する形にします」と述べるが、interface は extends の右辺にオブジェクト型しか取れず、mapped type が直接オブジェクト型に評価される場合のみ可能。条件型を含むものは不可など制約があり、説明が不正確。",
+      "currentChoiceTexts": [
+        "A: できない。mapped type は type alias でのみ書ける（interface には extends で取り込む形）",
+        "B: interface でしか書けない",
+        "C: interface でも `[K in keyof T]: T[K]` を直接書ける",
+        "D: 宣言マージで自動生成される"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説を「interface 本体には書けないため、mapped type を type alias として定義し、それがオブジェクト型に評価される場合のみ `interface I extends MappedAlias {}` の形で取り込める」と精緻化する。"
+    },
+    {
+      "id": "iface-032",
+      "severity": "minor",
+      "type": "ambiguity",
+      "problem": "選択肢 A は実装クラスのメソッド表記が「メソッド短縮記法」か「関数プロパティ形式」かで結果が変わる旨を述べるが、プロンプトでは「`fn(xs: number[])` と書くと？」とだけ書かれており、これは典型的にメソッド短縮記法を指す。プロンプトと選択肢の前提条件がやや噛み合っていない。",
+      "currentChoiceTexts": [
+        "A: 関数プロパティ形式では引数は反変なので、より狭い `number[]` への絞り込みは strictFunctionTypes 下でエラー。メソッド短縮記法ならバイバリアントとして許容される",
+        "B: 常にエラー",
+        "C: 常に許される",
+        "D: 実行時に変換が走る"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "プロンプトを「実装側が関数プロパティ形式（`fn: (xs: number[]) => void`）かメソッド短縮記法（`fn(xs: number[]): void`）かで挙動が変わる。違いとして正しいのは？」のように明示する。"
+    },
+    {
+      "id": "iface-035",
+      "severity": "warning",
+      "type": "weak-distractor",
+      "problem": "iface-001 と iface-013 と論点が大きく重複。さらに distractor B「interface 版だけが implements される」は無関係要素であり、不正答を即排除できる。",
+      "currentChoiceTexts": [
+        "A: interface 版は宣言マージ可能、type alias 版は不可",
+        "B: interface 版だけが implements される",
+        "C: type alias 版はジェネリックにできない",
+        "D: 両者は完全に同じ"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "ジェネリック特有の論点（例: 型パラメータのデフォルト・既定変位の扱いなど）に踏み込ませるか、iface-001 と統合・削除する。"
+    },
+    {
+      "id": "iface-022",
+      "severity": "minor",
+      "type": "ambiguity",
+      "problem": "選択肢 A「null と undefined 以外のほぼ全ての値を許容してしまう」は正しいが、`Object.create(null)` のような prototype を持たない値は厳密には別議論。ただし TS 型としては引き続き受け入れる。「ほぼ全て」と曖昧表現にしているため許容範囲だが、意図が読みづらい。",
+      "currentChoiceTexts": [
+        "A: `null` と `undefined` 以外のほぼ全ての値を許容してしまう",
+        "B: any と完全に同じ",
+        "C: コンパイルエラーになる",
+        "D: 宣言マージ不可"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "「`null`/`undefined` 以外の任意の値（プリミティブ含む）を許容する」と言い切り、any との違い（unknown を返さず型エラーにならない等）を解説に追記する。"
+    },
+    {
+      "id": "iface-044",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説は「文法的には許容されます」と述べるが、TypeScript では `interface` 自体に `declare` を付けるのは冗長と扱われ、トップレベル `declare` ブロック内（または .d.ts）以外では `declare interface` 単体は通るが意味的差異がない、という点が曖昧。読者が「declare interface はどこに書いてもよい」と誤解しうる。",
+      "currentChoiceTexts": [
+        "A: アンビエント宣言として型のみが提供される（実装は無い）",
+        "B: 実行時にグローバル変数が生まれる",
+        "C: コンパイルエラー",
+        "D: interface には declare を付けられない"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説に「interface は元来値を生まないため `declare` は実質ノーオペ。書いても害は無いが、慣習的には省略する」と明記。"
+    },
+    {
+      "id": "iface-009",
+      "severity": "warning",
+      "type": "weak-distractor",
+      "problem": "iface-006 とほぼ同一問題で、選択肢の品質も低い（C「クラスでしか使えない」、D「type alias でしかできない」は明らかな誤）。重複と弱い distractor の二重問題。",
+      "currentChoiceTexts": [
+        "A: 可能で、A と B のメンバを両方継承する",
+        "B: 1 つしか継承できない",
+        "C: クラスでしか使えない",
+        "D: type alias でしかできない"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "iface-006 と統合し、本問は「extends と & の優先順位」「同名メンバ衝突時の差分」など別論点に変更する。"
+    }
+  ]
+}
