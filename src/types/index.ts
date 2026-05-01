@@ -3,7 +3,9 @@ export type Category =
   | "interface"
   | "generics"
   | "utility"
-  | "advanced";
+  | "advanced"
+  | "narrowing"
+  | "classes";
 
 export const CATEGORY_LABEL: Record<Category, string> = {
   basic: "基本型 (Basic Types)",
@@ -11,6 +13,8 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   generics: "ジェネリクス",
   utility: "ユーティリティ型",
   advanced: "高度な型 (Conditional / Mapped / Infer)",
+  narrowing: "型の絞り込み (Type Narrowing)",
+  classes: "クラス (Classes)",
 };
 
 export interface Question {

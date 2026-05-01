@@ -249,4 +249,153 @@ export const QUESTIONS: readonly Question[] = [
     explanation:
       "リテラル型タグ（'circle' など）で switch による網羅チェックが効きます。never で漏れ検出。",
   },
+
+  {
+    id: "basic-005",
+    category: "basic",
+    prompt:
+      "`let x = 'hello'` と `const y = 'hello'` で推論される型はそれぞれ何ですか？",
+    choices: [
+      "x: string / y: 'hello'",
+      "x: 'hello' / y: 'hello'",
+      "x: string / y: string",
+      "x: 'hello' / y: string",
+    ],
+    answerIndex: 0,
+    explanation:
+      "let では再代入されうるためリテラル型から string へウィッデン（拡大）されます。const は再代入不可なのでリテラル型 'hello' のまま保持されます。",
+  },
+  {
+    id: "basic-006",
+    category: "basic",
+    prompt:
+      "`const t: [string, number] = ['age', 20]` のタプル型と `(string | number)[]` の違いは？",
+    choices: [
+      "タプルは要素数と各位置の型が固定、ユニオン配列は順序や個数が自由",
+      "両者は完全に同じ",
+      "タプルは実行時に長さが変えられない",
+      "ユニオン配列の方がメモリ効率が良い",
+    ],
+    answerIndex: 0,
+    explanation:
+      "タプル型は長さと各インデックスの型が決まっています。`(string | number)[]` は任意の個数の string か number を許容する配列です。",
+  },
+
+  {
+    id: "iface-004",
+    category: "interface",
+    prompt:
+      "`interface Dict { [key: string]: number }` のインデックスシグネチャの説明として正しいのは？",
+    choices: [
+      "任意の string キーに対して値が number であることを示す",
+      "key という名前のプロパティのみ許す",
+      "実行時に存在チェックを行う",
+      "string キーを number に変換する",
+    ],
+    answerIndex: 0,
+    explanation:
+      "インデックスシグネチャは「任意のキー名に対する値の型」を表します。具体的なプロパティを併記する場合、その値型もインデックス型に代入可能でなければなりません。",
+  },
+  {
+    id: "iface-005",
+    category: "interface",
+    prompt:
+      "`interface A { run(x: number): void }` と `interface B { run: (x: number) => void }` の違いとして正しいのは？",
+    choices: [
+      "メソッド記法はオーバーロードのバリアンスが緩く、関数プロパティ形式（strictFunctionTypes 下）の方が引数チェックが厳格",
+      "両者は実行時に異なる挙動になる",
+      "メソッド記法は this を持てない",
+      "関数プロパティ形式は呼び出せない",
+    ],
+    answerIndex: 0,
+    explanation:
+      "メソッド短縮記法は引数のバイバリアントとして扱われ、関数プロパティ形式は strictFunctionTypes により引数が反変（contravariant）にチェックされます。",
+  },
+
+  {
+    id: "gen-004",
+    category: "generics",
+    prompt:
+      "`function wrap<T = string>(x?: T): T[] { return x === undefined ? [] : [x] }` のデフォルト型パラメータの効果は？",
+    choices: [
+      "型引数を省略した場合、T は string として扱われる",
+      "T が常に string になり上書きできない",
+      "実行時に T が string に変換される",
+      "デフォルト値が string になる",
+    ],
+    answerIndex: 0,
+    explanation:
+      "ジェネリクスの `= string` はデフォルト型パラメータ。明示しない場合に使われ、`wrap<number>()` のように上書きも可能です。",
+  },
+  {
+    id: "gen-005",
+    category: "generics",
+    prompt:
+      "`type FirstArg<T> = T extends (a: infer A, ...rest: any[]) => any ? A : never` で `FirstArg<(s: string, n: number) => void>` は？",
+    choices: ["string", "number", "[string, number]", "never"],
+    answerIndex: 0,
+    explanation:
+      "infer A で第一引数の型を取り出します。関数 `(s: string, n: number) => void` の最初の引数は string です。",
+  },
+
+  {
+    id: "util-005",
+    category: "utility",
+    prompt:
+      "`type Scores = Record<'math' | 'eng', number>` と等価な型はどれ？",
+    choices: [
+      "{ math: number; eng: number }",
+      "{ [k: string]: number }",
+      "['math', 'eng', number]",
+      "{ math?: number; eng?: number }",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`Record<K, V>` は K の各リテラルをキー、V を値の型に持つオブジェクト型を作ります。ここでは math と eng が必須の number プロパティになります。",
+  },
+  {
+    id: "util-006",
+    category: "utility",
+    prompt: "`NonNullable<T>` の説明として正しいのは？",
+    choices: [
+      "T から null と undefined を除去したユニオン型",
+      "T を必須プロパティに変換する",
+      "T が null のとき例外を投げる",
+      "T を Required<T> と同義にする",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`NonNullable<T>` は `T extends null | undefined ? never : T` 相当で、null と undefined を除外します。値レベルのチェックは別途必要です。",
+  },
+
+  {
+    id: "adv-006",
+    category: "advanced",
+    prompt:
+      "`const config = { mode: 'dark', size: 12 } as const` の `as const` の効果は？",
+    choices: [
+      "全プロパティを readonly にし、値をリテラル型に固定する",
+      "実行時に Object.freeze する",
+      "オブジェクトを const 変数として束縛する",
+      "型エラーを抑制する",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`as const`（const アサーション）は、リテラル値をウィッデンせずそのままのリテラル型で推論し、配列をタプル化、プロパティを readonly にします。",
+  },
+  {
+    id: "adv-007",
+    category: "advanced",
+    prompt:
+      "`satisfies` 演算子の役割として正しいのは？",
+    choices: [
+      "値が指定型に適合することを検査しつつ、より具体的な推論型を保持する",
+      "値の型を強制的に上書きする（as と同じ）",
+      "実行時に型チェックを行う",
+      "型エイリアスを作る",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`satisfies` は型注釈と異なり、値の具体的な推論型（リテラル型など）を失わずに、指定した型への適合性だけを検査します。`as` と違い不正な型へのキャストはできません。",
+  },
 ];
