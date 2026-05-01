@@ -249,4 +249,290 @@ export const QUESTIONS: readonly Question[] = [
     explanation:
       "リテラル型タグ（'circle' など）で switch による網羅チェックが効きます。never で漏れ検出。",
   },
+
+  {
+    id: "basic-005",
+    category: "basic",
+    prompt:
+      "`let x = 'hello'` と `const y = 'hello'` で推論される型はそれぞれ何ですか？",
+    choices: [
+      "x: string / y: 'hello'",
+      "x: 'hello' / y: 'hello'",
+      "x: string / y: string",
+      "x: 'hello' / y: string",
+    ],
+    answerIndex: 0,
+    explanation:
+      "let では再代入されうるためリテラル型から string へウィッデン（拡大）されます。const は再代入不可なのでリテラル型 'hello' のまま保持されます。",
+  },
+  {
+    id: "basic-006",
+    category: "basic",
+    prompt:
+      "`const t: [string, number] = ['age', 20]` のタプル型と `(string | number)[]` の違いは？",
+    choices: [
+      "タプルは要素数と各位置の型が固定、ユニオン配列は順序や個数が自由",
+      "両者は完全に同じ",
+      "タプルは実行時に長さが変えられない",
+      "ユニオン配列の方がメモリ効率が良い",
+    ],
+    answerIndex: 0,
+    explanation:
+      "タプル型は長さと各インデックスの型が決まっています。`(string | number)[]` は任意の個数の string か number を許容する配列です。",
+  },
+
+  {
+    id: "iface-004",
+    category: "interface",
+    prompt:
+      "`interface Dict { [key: string]: number }` のインデックスシグネチャの説明として正しいのは？",
+    choices: [
+      "任意の string キーに対して値が number であることを示す",
+      "key という名前のプロパティのみ許す",
+      "実行時に存在チェックを行う",
+      "string キーを number に変換する",
+    ],
+    answerIndex: 0,
+    explanation:
+      "インデックスシグネチャは「任意のキー名に対する値の型」を表します。具体的なプロパティを併記する場合、その値型もインデックス型に代入可能でなければなりません。",
+  },
+  {
+    id: "iface-005",
+    category: "interface",
+    prompt:
+      "`interface A { run(x: number): void }` と `interface B { run: (x: number) => void }` の違いとして正しいのは？",
+    choices: [
+      "メソッド記法はオーバーロードのバリアンスが緩く、関数プロパティ形式（strictFunctionTypes 下）の方が引数チェックが厳格",
+      "両者は実行時に異なる挙動になる",
+      "メソッド記法は this を持てない",
+      "関数プロパティ形式は呼び出せない",
+    ],
+    answerIndex: 0,
+    explanation:
+      "メソッド短縮記法は引数のバイバリアントとして扱われ、関数プロパティ形式は strictFunctionTypes により引数が反変（contravariant）にチェックされます。",
+  },
+
+  {
+    id: "gen-004",
+    category: "generics",
+    prompt:
+      "`function wrap<T = string>(x?: T): T[] { return x === undefined ? [] : [x] }` のデフォルト型パラメータの効果は？",
+    choices: [
+      "型引数を省略した場合、T は string として扱われる",
+      "T が常に string になり上書きできない",
+      "実行時に T が string に変換される",
+      "デフォルト値が string になる",
+    ],
+    answerIndex: 0,
+    explanation:
+      "ジェネリクスの `= string` はデフォルト型パラメータ。明示しない場合に使われ、`wrap<number>()` のように上書きも可能です。",
+  },
+  {
+    id: "gen-005",
+    category: "generics",
+    prompt:
+      "`type FirstArg<T> = T extends (a: infer A, ...rest: any[]) => any ? A : never` で `FirstArg<(s: string, n: number) => void>` は？",
+    choices: ["string", "number", "[string, number]", "never"],
+    answerIndex: 0,
+    explanation:
+      "infer A で第一引数の型を取り出します。関数 `(s: string, n: number) => void` の最初の引数は string です。",
+  },
+
+  {
+    id: "util-005",
+    category: "utility",
+    prompt:
+      "`type Scores = Record<'math' | 'eng', number>` と等価な型はどれ？",
+    choices: [
+      "{ math: number; eng: number }",
+      "{ [k: string]: number }",
+      "['math', 'eng', number]",
+      "{ math?: number; eng?: number }",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`Record<K, V>` は K の各リテラルをキー、V を値の型に持つオブジェクト型を作ります。ここでは math と eng が必須の number プロパティになります。",
+  },
+  {
+    id: "util-006",
+    category: "utility",
+    prompt: "`NonNullable<T>` の説明として正しいのは？",
+    choices: [
+      "T から null と undefined を除去したユニオン型",
+      "T を必須プロパティに変換する",
+      "T が null のとき例外を投げる",
+      "T を Required<T> と同義にする",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`NonNullable<T>` は `T extends null | undefined ? never : T` 相当で、null と undefined を除外します。値レベルのチェックは別途必要です。",
+  },
+
+  {
+    id: "adv-006",
+    category: "advanced",
+    prompt:
+      "`const config = { mode: 'dark', size: 12 } as const` の `as const` の効果は？",
+    choices: [
+      "全プロパティを readonly にし、値をリテラル型に固定する",
+      "実行時に Object.freeze する",
+      "オブジェクトを const 変数として束縛する",
+      "型エラーを抑制する",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`as const`（const アサーション）は、リテラル値をウィッデンせずそのままのリテラル型で推論し、配列をタプル化、プロパティを readonly にします。",
+  },
+  {
+    id: "adv-007",
+    category: "advanced",
+    prompt:
+      "`satisfies` 演算子の役割として正しいのは？",
+    choices: [
+      "値が指定型に適合することを検査しつつ、より具体的な推論型を保持する",
+      "値の型を強制的に上書きする（as と同じ）",
+      "実行時に型チェックを行う",
+      "型エイリアスを作る",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`satisfies` は型注釈と異なり、値の具体的な推論型（リテラル型など）を失わずに、指定した型への適合性だけを検査します。`as` と違い不正な型へのキャストはできません。",
+  },
+
+  {
+    id: "narrow-001",
+    category: "narrowing",
+    prompt:
+      "`function f(x: string | number) { if (typeof x === 'string') { /* ここでの x の型は？ */ } }`",
+    choices: ["string", "number", "string | number", "unknown"],
+    answerIndex: 0,
+    explanation:
+      "`typeof` ガードにより、then ブロック内では x は string に絞り込まれます。else 側では number になります。",
+  },
+  {
+    id: "narrow-002",
+    category: "narrowing",
+    prompt:
+      "ユーザー定義型ガードを書く正しい構文はどれですか？",
+    choices: [
+      "function isCat(x: unknown): x is Cat { ... }",
+      "function isCat(x: unknown): boolean<Cat> { ... }",
+      "function isCat(x: unknown) as Cat { ... }",
+      "function isCat<Cat>(x): boolean { ... }",
+    ],
+    answerIndex: 0,
+    explanation:
+      "戻り値の型を `引数 is 型` の形式（型述語）にすることで、true を返したスコープでその型に絞り込まれます。",
+  },
+  {
+    id: "narrow-003",
+    category: "narrowing",
+    prompt:
+      "`in` 演算子の絞り込みとして正しいのは？",
+    choices: [
+      "`'swim' in animal` のように、特定プロパティを持つ型に絞り込める",
+      "オブジェクトを iterate する",
+      "配列の要素検索に使う",
+      "型エイリアスを生成する",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`in` 演算子はランタイム検査ですが、TS は then 側で「そのキーを持つメンバー型」に絞り込んでくれます。Discriminated Union とともによく使います。",
+  },
+  {
+    id: "narrow-004",
+    category: "narrowing",
+    prompt:
+      "switch で網羅性を保証するために default で使うべき型はどれですか？",
+    choices: ["never", "void", "unknown", "any"],
+    answerIndex: 0,
+    explanation:
+      "`const _exhaustive: never = x` を default に書くと、ケース漏れがあった瞬間に never への代入エラーになり、コンパイル時に検出できます。",
+  },
+  {
+    id: "narrow-005",
+    category: "narrowing",
+    prompt:
+      "`x: string | null` を非 null に絞り込む最も簡潔な方法は？",
+    choices: [
+      "if (x !== null) { /* ここで x は string */ }",
+      "if (typeof x === 'string') を使う以外にない",
+      "as string でキャストする",
+      "Object.is(x, null) を使う",
+    ],
+    answerIndex: 0,
+    explanation:
+      "等価/不等価チェック（`!== null`、`!= null`、truthiness）も TS の絞り込み対象です。`!= null` は null と undefined の両方を一度に除外できます。",
+  },
+
+  {
+    id: "class-001",
+    category: "classes",
+    prompt:
+      "TypeScript のクラスにおける `private` と `#` プライベートフィールドの違いは？",
+    choices: [
+      "private はコンパイル時のみ、# は実行時にも真にプライベート",
+      "両者は完全に同じ",
+      "# は ES5 でも動く",
+      "private は継承先で見える",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`private` は TS の型レベルのアクセス制限で実行時には普通にアクセス可能。`#field` は ECMAScript の Private Class Fields で実行時にも本当にプライベートです。",
+  },
+  {
+    id: "class-002",
+    category: "classes",
+    prompt:
+      "`constructor(public readonly id: number) {}` の意味として正しいのは？",
+    choices: [
+      "id プロパティを宣言・初期化・public readonly にする省略記法（パラメータプロパティ）",
+      "id を引数として受け取るだけ",
+      "id を private にする",
+      "構文エラー",
+    ],
+    answerIndex: 0,
+    explanation:
+      "コンストラクタ引数にアクセス修飾子や readonly を付けると、同名プロパティの宣言と代入を自動で行ってくれます（パラメータプロパティ）。",
+  },
+  {
+    id: "class-003",
+    category: "classes",
+    prompt:
+      "`abstract class` の特徴として正しいのは？",
+    choices: [
+      "直接インスタンス化できず、サブクラスで abstract メンバーを実装する必要がある",
+      "実行時に存在しない型情報",
+      "interface と完全に同じ",
+      "extends できない",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`abstract` クラスは `new` で直接生成不可。`abstract` メソッド/プロパティはサブクラスで実装が強制されます。",
+  },
+  {
+    id: "class-004",
+    category: "classes",
+    prompt:
+      "`class Dog implements Animal {}` の `implements` の意味は？",
+    choices: [
+      "Dog が Animal の構造（プロパティ・メソッド）を満たすことを契約として保証する",
+      "Animal のメソッド実装を継承する",
+      "Animal の private 実装を流用する",
+      "Animal の static メンバーを取り込む",
+    ],
+    answerIndex: 0,
+    explanation:
+      "`implements` は形状のチェックのみで実装の継承はしません。実装も継承したいときは `extends` を使います。",
+  },
+  {
+    id: "class-005",
+    category: "classes",
+    prompt:
+      "クラスのアクセス修飾子で「派生クラスからは見えるが外部からは見えない」のは？",
+    choices: ["protected", "private", "public", "readonly"],
+    answerIndex: 0,
+    explanation:
+      "`protected` は同クラスとその派生クラスからアクセス可能。外部のインスタンスからはアクセスできません。",
+  },
 ];

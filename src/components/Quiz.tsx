@@ -3,6 +3,7 @@ import type { AnswerResult, Category, SessionResult } from "../types";
 import { CATEGORY_LABEL } from "../types";
 import { pickQuestions } from "../lib/quiz";
 import { appendSession } from "../lib/storage";
+import { RichText } from "./RichText";
 
 interface Props {
   category: Category | "all";
@@ -82,7 +83,7 @@ export function Quiz({ category, onFinish }: Props) {
         <div>
           <span className="tag">{CATEGORY_LABEL[current.category]}</span>
         </div>
-        <h2 style={{ marginTop: 8 }}>{current.prompt}</h2>
+        <h2 style={{ marginTop: 8 }}><RichText text={current.prompt} /></h2>
 
         <div className="choices">
           {current.choices.map((c, i) => {
@@ -100,7 +101,8 @@ export function Quiz({ category, onFinish }: Props) {
                 disabled={isAnswered}
                 onClick={() => handleSelect(i)}
               >
-                {String.fromCharCode(65 + i)}. {c}
+                <span className="choice-letter">{String.fromCharCode(65 + i)}</span>
+                <span className="choice-text"><RichText text={c} /></span>
               </button>
             );
           })}
@@ -110,7 +112,7 @@ export function Quiz({ category, onFinish }: Props) {
           <>
             <div className="explanation">
               <strong>{isCorrect ? "正解！" : "不正解"}</strong>
-              <div style={{ marginTop: 6 }}>{current.explanation}</div>
+              <div style={{ marginTop: 6 }}><RichText text={current.explanation} /></div>
             </div>
             <div className="btn-row" style={{ marginTop: 16 }}>
               <button className="btn btn-primary" onClick={handleNext}>

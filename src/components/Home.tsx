@@ -14,13 +14,7 @@ export function Home({ onStart, onShowHistory }: Props) {
       acc[c] = QUESTIONS.filter((q) => q.category === c).length;
       return acc;
     },
-    {
-      basic: 0,
-      interface: 0,
-      generics: 0,
-      utility: 0,
-      advanced: 0,
-    },
+    Object.fromEntries(categories.map((c) => [c, 0])) as Record<Category, number>,
   );
 
   return (
