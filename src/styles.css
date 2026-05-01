@@ -393,6 +393,38 @@ code {
   white-space: pre-wrap;
 }
 
+.prompt {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 8px 0 12px;
+  letter-spacing: -0.005em;
+}
+
+.code-block {
+  display: block;
+  margin: 12px 0;
+  padding: 14px 16px;
+  background: rgba(8, 14, 26, 0.6);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.code-block code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--text);
+  white-space: pre;
+  word-break: normal;
+  font-size: 1em;
+}
+
 h2 code, h3 code {
   font-size: 0.82em;
 }
@@ -406,6 +438,13 @@ h2 code, h3 code {
     background: rgba(9, 105, 218, 0.08);
     border-color: rgba(9, 105, 218, 0.2);
     color: #0860c7;
+  }
+  .code-block {
+    background: rgba(9, 105, 218, 0.05);
+  }
+  .code-block code {
+    color: var(--text);
+    background: transparent;
   }
 }
 
