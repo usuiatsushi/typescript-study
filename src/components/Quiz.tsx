@@ -100,7 +100,8 @@ export function Quiz({ category, onFinish }: Props) {
                 disabled={isAnswered}
                 onClick={() => handleSelect(i)}
               >
-                {String.fromCharCode(65 + i)}. {c}
+                <span className="choice-letter">{String.fromCharCode(65 + i)}</span>
+                <span className="choice-text">{c}</span>
               </button>
             );
           })}
