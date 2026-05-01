@@ -47,14 +47,14 @@ export const QUESTIONS: readonly Question[] = [
     difficulty: "easy",
     prompt: "void と undefined の関係について正しいのは？",
     choices: [
-      "void は何も返さない関数の戻り値型として使われ、undefined を含む",
+      "void は関数の戻り値型として使われ、戻り値を利用しない契約を表す（undefined を返しても代入互換）",
       "void は undefined と完全に同じ",
       "void は never の別名",
       "void はオブジェクト型",
     ],
     answerIndex: 0,
     explanation:
-      "戻り値が無い関数の戻り型が void です。実行時には undefined が返ります。",
+      "void は「戻り値を利用しない」ことを示す型で、関数戻り値型の文脈では undefined を返しても代入互換です（実行時には undefined が返る）。ただし `void` 型自体に undefined が「含まれる」わけではなく、変数として `void` を宣言してもその値を取り出して使うことはできません。",
   },
 
   {
@@ -325,14 +325,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`interface A { run(x: number): void }` と `interface B { run: (x: number) => void }` の違いとして正しいのは？",
     choices: [
-      "メソッド記法はオーバーロードのバリアンスが緩く、関数プロパティ形式（strictFunctionTypes 下）の方が引数チェックが厳格",
+      "メソッド短縮記法は引数がバイバリアントに緩く扱われ、関数プロパティ形式は strictFunctionTypes 下で引数が反変として厳格にチェックされる",
       "両者は実行時に異なる挙動になる",
       "メソッド記法は this を持てない",
       "関数プロパティ形式は呼び出せない",
     ],
     answerIndex: 0,
     explanation:
-      "メソッド短縮記法は引数のバイバリアントとして扱われ、関数プロパティ形式は strictFunctionTypes により引数が反変（contravariant）にチェックされます。",
+      "メソッド短縮記法は歴史的経緯で引数がバイバリアント（双変）に緩く扱われ、関数プロパティ形式は strictFunctionTypes 下で引数が反変として厳格にチェックされます。安全性を取るなら関数プロパティ形式を使うとよいでしょう。",
   },
 
   {
@@ -1056,7 +1056,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`Array.isArray` は組み込みの型述語で、unknown を `any[]` に絞り込みます。ジェネリクス情報は失われるため、要素型はその後に検査が必要です。",
+      "`Array.isArray` の型述語は `arg is any[]` のため、`unknown` は `any[]` に絞り込まれます（`unknown[]` ではない点に注意）。要素型は別途検査が必要です。",
   },
   {
     id: "basic-019",
@@ -1264,7 +1264,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "オブジェクト形状の表現ならどちらでもほぼ同等で、宣言マージが必要なら interface、ユニオン等が必要なら type を選ぶのが定石です。type alias もクラスから implements 可能です。",
+      "オブジェクト形状の表現ならどちらでもほぼ同等で、宣言マージが必要なら interface、ユニオン等が必要なら type を選ぶのが定石です。オブジェクト形状を表す type alias であればクラスから implements も可能です（ユニオンや primitive を含む type alias は不可）。",
   },
   {
     id: "basic-032",
@@ -1945,14 +1945,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`interface I { fn(xs: ReadonlyArray<number>): void }` を実装するクラスで `fn(xs: number[])` と書くと？",
     choices: [
-      "引数型が反変方向で広い必要があるが、`number[]` は `ReadonlyArray<number>` より狭く strictFunctionTypes 下では関数プロパティ形式だとエラー、メソッド短縮記法だと許される",
+      "関数プロパティ形式では引数は反変なので、より狭い `number[]` への絞り込みは strictFunctionTypes 下でエラー。メソッド短縮記法ならバイバリアントとして許容される",
       "常にエラー",
       "常に許される",
       "実行時に変換が走る",
     ],
     answerIndex: 0,
     explanation:
-      "メソッド短縮記法はバイバリアントに緩く、関数プロパティ型は strictFunctionTypes で反変判定されます。`ReadonlyArray<T>` は `T[]` より広いので、引数として狭める方向は関数プロパティ形式では弾かれます。",
+      "`number[]` は `ReadonlyArray<number>` のサブタイプ（より狭い型）です。関数プロパティ形式は strictFunctionTypes 下で引数を反変（広い方向のみ許容）として扱うため、狭める方向はエラー。メソッド短縮記法はバイバリアントなので許されます。",
   },
   {
     id: "iface-033",
@@ -2057,14 +2057,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "interface のキーに `unique symbol` を使えるか？",
     choices: [
-      "計算プロパティ名として `[K]: T`（K は const の unique symbol）の形で使える",
+      "`unique symbol` 型の const をブラケット内に書く計算プロパティ名（`interface X { [K]: T }`）として使える。任意の `symbol` 型変数は不可",
       "interface のキーは string/number のみ",
       "`symbol` 型なら何でも使える",
       "Symbol キーはランタイム限定で型に出せない",
     ],
     answerIndex: 0,
     explanation:
-      "`const K: unique symbol = Symbol()` を計算プロパティとして `interface X { [K]: T }` に使えます。任意の `symbol` 型は使えません。",
+      "`const K: unique symbol = Symbol()` のように `unique symbol` 型を持つ const を、計算プロパティ名 `[K]` として `interface X { [K]: T }` で利用できます。これはインデックスシグネチャではなく特定キーの宣言です。任意の `symbol` 型変数では型レベルで識別できないため使えません。",
   },
   {
     id: "iface-040",
@@ -2144,7 +2144,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`declare` は型のみを宣言するアンビエント宣言。.d.ts では `declare` 自体が暗黙ですが、明示しても合法です。",
+      "interface はもともと型のみを宣言するため `declare` は冗長ですが、文法的には許容されます。.d.ts かどうかに関わらず挙動は同じで、実行時の値は生まれません。",
   },
   {
     id: "iface-045",
@@ -2699,14 +2699,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "共変・反変について `(x: Animal) => Animal` を `(x: Dog) => Dog` に代入できるかどうか（strictFunctionTypes 下、Dog extends Animal）？",
     choices: [
-      "代入できない（引数は反変、戻り値は共変のため Animal を要求する側に Dog 専用関数は危険）",
-      "代入できる（戻り値が共変なので OK）",
+      "代入できない（戻り値は共変のため、Animal を返す関数を Dog を返すべき場所に置けない）",
+      "代入できる（引数も戻り値も共変なので問題ない）",
       "両方とも常にエラー",
       "実装依存で決まる",
     ],
     answerIndex: 0,
     explanation:
-      "関数を `(x: Dog) => Dog` の場所に渡したいなら、引数はより広い型 (Animal) を受け付ける関数なら可。逆向き（広い→狭い）の代入は引数の反変性のため不可。",
+      "引数の反変性から、`(x: Animal) => ...` は `(x: Dog) => ...` の場所に置いても引数面は安全（Dog を渡せば Animal として受け取れる）。一方、戻り値は共変なので Animal を返す関数を Dog を返すべき場所に置けない。よって全体としては代入不可。",
   },
   {
     id: "gen-043",
@@ -2855,13 +2855,13 @@ export const QUESTIONS: readonly Question[] = [
     prompt: "`ThisType<T>` の正しい使用文脈はどれですか?",
     choices: [
       "クラス継承で `this` の型を固定するために使う",
-      "オブジェクトリテラルにおいて、メソッド内の `this` の型をコンテキストから推論させるためのマーカー型として使う(`noImplicitThis` 下で意味がある)",
+      "`--noImplicitThis` を有効にした際に、オブジェクトリテラルのメソッド内 `this` の型を `T` として推論させるためのマーカー型として使う",
       "`this` バインドを実行時に変更する",
       "関数の戻り値に `this` を設定する",
     ],
     answerIndex: 1,
     explanation:
-      "`ThisType<T>` は中身を持たないマーカー型で、オブジェクトリテラルのメソッド内 `this` の型を `T` として推論させる際に使われます(例: Vue の options pattern)。",
+      "`ThisType<T>` は中身を持たないマーカー型で、`--noImplicitThis` 有効下のオブジェクトリテラル文脈で、メソッド内 `this` を `T` として推論させる目的に使います（例: Vue の options pattern）。",
   },
   {
     id: "util-017",
@@ -2949,7 +2949,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "再帰的な分岐型を使い、`object` を継承するプロパティはさらに `DeepPartial` を適用、それ以外はそのまま残すのが基本形です。",
+      "再帰的な分岐型を使い、`object` を継承するプロパティにさらに `DeepPartial` を適用、それ以外はそのまま残すのが基本形です。注意点として、関数や配列も `object` を継承するため `T[K] extends Function` や `T[K] extends Array<infer U> ? Array<DeepPartial<U>> : ...` の分岐を加えるのが実用的です。",
   },
   {
     id: "util-024",
@@ -3282,14 +3282,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`ReadonlyArray<T>` と `Readonly<Array<T>>` の関係として正しいものは?",
     choices: [
-      "`Readonly<Array<T>>` は `T[]` をプロパティ単位で `readonly` にするだけで、`push` などのメソッドが残るので `ReadonlyArray<T>` とは異なる",
+      "`Readonly<Array<T>>` は `length` 等を readonly にするのみで、`push`/`pop` の呼び出しまでは禁止しない。要素変更を防ぐには `ReadonlyArray<T>` か `readonly T[]` を使う",
       "両者は完全に同じ",
       "`ReadonlyArray<T>` は存在しない型",
       "`Readonly<Array<T>>` の方が制約が強い",
     ],
     answerIndex: 0,
     explanation:
-      "`Readonly<Array<T>>` は `length` などをプロパティとして `readonly` にするだけで、`push` 等の変更系メソッドは残ります。要素の追加・変更まで禁止したい場合は `ReadonlyArray<T>` か `readonly T[]` を使います。",
+      "`Readonly<Array<T>>` は `Array<T>` の各プロパティを `readonly` にマップしますが、`push` 等の変更系メソッドはプロパティ自体が readonly になっても呼び出して中身を書き換えることまでは止められません。`ReadonlyArray<T>`（または `readonly T[]`）は専用の型で、変更系メソッドが定義されていません。",
   },
 
   // === advanced batch ===
@@ -3314,7 +3314,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type IsUnion<T> = [T] extends [infer _] ? false : never` のように `[T] extends [U]` と書く狙いは？",
+      "条件型で `T extends U ? ... : ...` ではなく `[T] extends [U] ? ... : ...` と書く狙いは？",
     choices: [
       "ユニオン分配を抑制し、`T` を一塊として扱うため",
       "タプル比較に強制するための構文糖衣",
@@ -3323,7 +3323,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "条件型は「裸の型パラメータ (naked T)」がユニオンのときに分配されます。`[T]` のようにタプルでラップすると分配が止まり、ユニオン全体を一つの型として扱えます。",
+      "条件型は「裸の型パラメータ (naked T)」がユニオンのときに各メンバーに分配されます。`[T]` のようにタプルでラップすると分配が止まり、ユニオン全体を一つの型として扱えます。たとえばユニオン判定を作る場合は `type IsUnion<T, U = T> = T extends any ? ([U] extends [T] ? false : true) : never` のように、コピー型変数を使って分配挙動と非分配比較を組み合わせます。",
   },
   {
     id: "adv-013",
@@ -3470,7 +3470,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type Join<T extends readonly string[], D extends string> = T extends readonly [infer H extends string, ...infer R extends string[]] ? R['length'] extends 0 ? H : `${H}${D}${Join<R, D>}` : ''` の `Join<['a','b','c'], '-'>` は？",
+      "`type Join<T extends readonly string[], D extends string> = T extends readonly [infer H extends string, ...infer R extends readonly string[]] ? R['length'] extends 0 ? H : `${H}${D}${Join<R, D>}` : ''` の `Join<['a','b','c'], '-'>` は？",
     choices: ["'a-b-c'", "'abc'", "'a,b,c'", "string"],
     answerIndex: 0,
     explanation:
@@ -3546,7 +3546,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "タプル長を使った型レベル加算 `type Add<A extends number, B extends number> = [...Tuple<A>, ...Tuple<B>]['length']` のポイントは？",
+      "タプル長を使った型レベル加算 `type Add<A extends number, B extends number> = [...Tuple<A>, ...Tuple<B>]['length']` のポイントは？（ここで `Tuple<N>` は長さ N の任意要素タプルを構築する補助型）",
     choices: [
       "長さ A と B のタプルを連結し、その `length` プロパティから合計長 (= A+B) を読み取る",
       "TypeScript の組み込み算術演算子 `+` を型に持ち込んでいる",
@@ -3555,7 +3555,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "TS の型システムには算術演算子はありませんが、タプル長として表現すれば連結の長さで加算が再現できます。引き算はスライス、減算は infer での分解で表現します。",
+      "TS の型システムには算術演算子はありませんが、タプル長として表現すれば連結の長さで加算が再現できます。`Tuple<N>` は典型的に `BuildTuple<N, R extends unknown[] = []> = R['length'] extends N ? R : BuildTuple<N, [...R, unknown]>` のように再帰で構築します。引き算は infer での分解で表現します。",
   },
   {
     id: "adv-030",
@@ -3679,7 +3679,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "対象キーのみ再帰的に書き換え、その他は素通しにする Mapped + 条件型のパターンが一般的です。タプルや配列は別ケースとして扱います。",
+      "対象キーのみ再帰的に書き換え、その他は素通しにする Mapped + 条件型のパターンが一般的です。完全な実装ではパスを `${infer Head}.${infer Rest}` で分解し、`Rest` が空のベースケース（`{ [K in keyof T]: K extends P ? V : T[K] }`）と再帰ケースを2分岐します。例で示したのは再帰アームのみ。タプルや配列は別ケースとして扱います。",
   },
   {
     id: "adv-039",
@@ -3839,7 +3839,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "関数型の引数は反変位置のため、infer を関数引数で行うと交差ではなくユニオンになるなどの挙動差があります。意図しない反変結合に注意が必要です。",
+      "関数型の引数は反変位置のため、`infer` で複数の候補が反変位置（関数引数）から得られると **交差 (intersection)** として結合されます。逆に共変位置（戻り値など）では **和 (union)** として結合されます。意図しない交差結合に注意が必要です。",
   },
   {
     id: "adv-049",
@@ -3900,7 +3900,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "`typeof x === \"function\"` で絞り込まれると、TypeScript は `x` を組み込みの `Function` 型として扱います。引数や戻り値の型までは推論しません。",
+      "`typeof x === \"function\"` で絞り込まれると、TypeScript は `x` を組み込みの `Function` インターフェースとして扱います。`Function` は `(...args: any[]) => any` 相当で意図的に緩い型のため、引数や戻り値までは推論しません。",
   },
   {
     id: "narrow-010",
@@ -3952,14 +3952,14 @@ export const QUESTIONS: readonly Question[] = [
     prompt:
       "`n: number | undefined` に対し `if (n) { ... }` の中で `n` の型はどうなりますか？",
     choices: [
-      "`number`（ただし `0` も除外される）",
+      "`number`（実行時には `0` も入らないが型上は `number`）",
       "`number | undefined`",
       "`undefined`",
       "`never`",
     ],
     answerIndex: 0,
     explanation:
-      "truthiness 絞り込みでは falsy な `0` と `undefined` の両方が除外されます。`0` を残したい場合は `n !== undefined` で絞り込む必要があります。",
+      "truthiness 絞り込みは `undefined` を除外するため型上は `number` になります。実行時には `0` も falsy として除外されますが、型システムは「`number` から `0` を除いた型」までは表現せず、ただの `number` として扱います。`0` の場合も処理したいなら `n !== undefined` で絞り込みます。",
   },
   {
     id: "narrow-014",
@@ -4085,16 +4085,16 @@ export const QUESTIONS: readonly Question[] = [
       "`number | string`",
       "`never`",
     ],
-    answerIndex: 0,
+    answerIndex: 2,
     explanation:
-      "TypeScript は `==`（緩い等値）でも型を絞り込みます。`y: string` と等しいなら `x` は `string` 側に絞り込まれます（数値→文字列の暗黙変換は型上はサポートされない）。",
+      "`==`（緩い等値）は異なる型同士でも暗黙変換で真になりうる（例: `1 == '1'` は true）ため、TypeScript は安全側に倒して絞り込みません。`x` は `number | string` のままです。確実に絞りたい場合は `===` を使ってください。",
   },
   {
     id: "narrow-022",
     category: "narrowing",
     difficulty: "medium",
     prompt:
-      "次のコードについて正しい説明はどれですか？\n```ts\nconst arr: (string | undefined)[] = [\"a\", undefined, \"b\"];\nconst filtered = arr.filter(x => x !== undefined);\n```",
+      "TS 5.4 以前で次のコードの `filtered` の推論型はどれですか？\n```ts\nconst arr: (string | undefined)[] = [\"a\", undefined, \"b\"];\nconst filtered = arr.filter(x => x !== undefined);\n```",
     choices: [
       "`filtered` は `string[]` に推論される",
       "`filtered` は `(string | undefined)[]` のままになる",
@@ -4103,7 +4103,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "通常のコールバックでは `filter` の結果型は元の配列と同じです。`string[]` にしたい場合は型述語を使い `(x): x is string => x !== undefined` のように書きます（TS 5.5 以降は推論可能）。",
+      "TS 5.4 以前では `filter` のコールバックが単に boolean を返すと結果型は元の配列と同じになります。`string[]` にしたい場合は型述語を使い `(x): x is string => x !== undefined` のように書きます。なお TS 5.5 以降ではアロー関数からの型述語推論が改善され、本コードのままでも `string[]` に推論されるようになりました。",
   },
   {
     id: "narrow-023",
@@ -4247,7 +4247,7 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 1,
     explanation:
-      "TS 4.x 以降、`Array.isArray` は readonly な配列型に対しても適切に絞り込めるよう改善され、`readonly string[]` をそのまま絞り込めます（古い版では `any[]` に絞られる問題がありました）。",
+      "`Array.isArray` の型述語は `arg is any[]` ですが、ユニオンの絞り込みでは「配列メンバーのみ残す」効果として働きます。元のユニオンに含まれる `readonly string[]` だけが残るため、ここでは `readonly string[]` に絞り込まれます。",
   },
   {
     id: "narrow-032",
@@ -4617,10 +4617,10 @@ export const QUESTIONS: readonly Question[] = [
     choices: [
       "問題なくコンパイルできる",
       "実装シグネチャでパラメータプロパティ（`public value`）を使うとエラーになる",
-      "オーバーロードシグネチャに `public` を付けないとエラーになる",
+      "オーバーロードシグネチャにも `public` を付けないとエラーになる",
       "コンストラクタオーバーロードは TypeScript では許可されない",
     ],
-    answerIndex: 1,
-    explanation: "オーバーロードシグネチャと実装シグネチャの両方が必要なケースで、実装シグネチャにパラメータプロパティ（`public`/`private` など）を付けることはできません。通常のパラメータとして受け取り、本体内でフィールドに代入する必要があります。",
+    answerIndex: 0,
+    explanation: "パラメータプロパティ（`public`/`private`/`readonly` 付き引数）はコンストラクタの **実装シグネチャでのみ** 許可されます。オーバーロードシグネチャには付けられません。よってこのコードは問題なくコンパイルでき、`value` プロパティが自動で生成されます。",
   },
 ];
