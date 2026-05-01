@@ -244,10 +244,10 @@ export const QUESTIONS: readonly Question[] = [
     difficulty: "hard",
     prompt: "Template Literal Type の例として正しいのは？",
     choices: [
-      "type Hello<T extends string> = `hello, ${T}`",
-      "type Hello = string + 'world'",
-      "type Hello = concat<'a','b'>",
-      "type Hello = `${number+1}`",
+      "``type Hello<T extends string> = `hello, ${T}` ``",
+      "``type Hello = string + 'world'``",
+      "``type Hello = concat<'a','b'>``",
+      "``type Hello = `${number+1}` ``",
     ],
     answerIndex: 0,
     explanation:
@@ -2665,7 +2665,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "generics",
     difficulty: "hard",
     prompt:
-      "`type Path<T> = T extends object ? { [K in keyof T & string]: K | \\`${K}.${Path<T[K]>}\\` }[keyof T & string] : never` のような再帰条件型の主な制限は？",
+      "``type Path<T> = T extends object ? { [K in keyof T & string]: K | `${K}.${Path<T[K]>}` }[keyof T & string] : never`` のような再帰条件型の主な制限は？",
     choices: [
       "再帰の深さに上限（おおむね 50 段）があり、深くネストした型や循環構造では `Type instantiation is excessively deep and possibly infinite` エラーになる",
       "object 型のみで使える",
@@ -3454,7 +3454,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S]` で `Split<'a,b,c', ','>` は？",
+      "``type Split<S extends string, D extends string> = S extends `${infer H}${D}${infer T}` ? [H, ...Split<T, D>] : [S]`` で `Split<'a,b,c', ','>` は？",
     choices: [
       "['a', 'b', 'c']",
       "['a,b,c']",
@@ -3470,7 +3470,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type Join<T extends readonly string[], D extends string> = T extends readonly [infer H extends string, ...infer R extends readonly string[]] ? R['length'] extends 0 ? H : `${H}${D}${Join<R, D>}` : ''` の `Join<['a','b','c'], '-'>` は？",
+      "``type Join<T extends readonly string[], D extends string> = T extends readonly [infer H extends string, ...infer R extends readonly string[]] ? R['length'] extends 0 ? H : `${H}${D}${Join<R, D>}` : ''`` の `Join<['a','b','c'], '-'>` は？",
     choices: ["'a-b-c'", "'abc'", "'a,b,c'", "string"],
     answerIndex: 0,
     explanation:
@@ -3481,7 +3481,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type Replace<S extends string, From extends string, To extends string> = S extends `${infer A}${From}${infer B}` ? `${A}${To}${B}` : S` の `Replace<'foo bar foo', 'foo', 'baz'>` は？",
+      "``type Replace<S extends string, From extends string, To extends string> = S extends `${infer A}${From}${infer B}` ? `${A}${To}${B}` : S`` の `Replace<'foo bar foo', 'foo', 'baz'>` は？",
     choices: [
       "'baz bar foo'",
       "'baz bar baz'",
@@ -3490,14 +3490,14 @@ export const QUESTIONS: readonly Question[] = [
     ],
     answerIndex: 0,
     explanation:
-      "この実装は最初の出現のみを置換します。全置換にしたい場合は再帰呼び出し `Replace<\`${A}${To}${B}\`, From, To>` を加える必要があります。",
+      "この実装は最初の出現のみを置換します。全置換にしたい場合は再帰呼び出し ``Replace<`${A}${To}${B}`, From, To>`` を加える必要があります。",
   },
   {
     id: "adv-025",
     category: "advanced",
     difficulty: "medium",
     prompt:
-      "`type Trim<S extends string> = S extends ` ${infer R}` | `${infer R} ` ? Trim<R> : S` の `Trim<'  hi  '>` は？",
+      "``type Trim<S extends string> = S extends ` ${infer R}` | `${infer R} ` ? Trim<R> : S`` の `Trim<'  hi  '>` は？",
     choices: ["'hi'", "'  hi  '", "' hi '", "string"],
     answerIndex: 0,
     explanation:
@@ -3508,29 +3508,29 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "easy",
     prompt:
-      "`type StartsWith<S extends string, T extends string> = S extends `${T}${string}` ? true : false` で `StartsWith<'hello', 'he'>` は？",
+      "``type StartsWith<S extends string, T extends string> = S extends `${T}${string}` ? true : false`` で `StartsWith<'hello', 'he'>` は？",
     choices: ["true", "false", "boolean", "never"],
     answerIndex: 0,
     explanation:
-      "テンプレートリテラル型 `${T}${string}` は「T で始まり任意の文字列が続く」を表します。`'hello'` はこれに当てはまるので `true`。",
+      "テンプレートリテラル型 ``\`${T}${string}\` `` は「T で始まり任意の文字列が続く」を表します。`'hello'` はこれに当てはまるので `true`。",
   },
   {
     id: "adv-027",
     category: "advanced",
     difficulty: "easy",
     prompt:
-      "`type EndsWith<S extends string, T extends string> = S extends `${string}${T}` ? true : false` で `EndsWith<'index.ts', '.js'>` は？",
+      "``type EndsWith<S extends string, T extends string> = S extends `${string}${T}` ? true : false`` で `EndsWith<'index.ts', '.js'>` は？",
     choices: ["false", "true", "boolean", "never"],
     answerIndex: 0,
     explanation:
-      "末尾を判定するには `${string}${T}` のパターンを使います。`'index.ts'` は `.js` で終わらないため `false`。",
+      "末尾を判定するには ``\`${string}${T}\` `` のパターンを使います。`'index.ts'` は `.js` で終わらないため `false`。",
   },
   {
     id: "adv-028",
     category: "advanced",
     difficulty: "medium",
     prompt:
-      "`type Prefix<T, P extends string> = { [K in keyof T & string as `${P}${K}`]: T[K] }` を `Prefix<{a:1; b:2}, 'on_'>` に適用した結果のキーは？",
+      "``type Prefix<T, P extends string> = { [K in keyof T & string as `${P}${K}`]: T[K] }`` を `Prefix<{a:1; b:2}, 'on_'>` に適用した結果のキーは？",
     choices: [
       "'on_a' | 'on_b'",
       "'a' | 'b'",
@@ -3638,7 +3638,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "深いキーパス型 `type Paths<T> = { [K in keyof T & string]: T[K] extends object ? K | `${K}.${Paths<T[K]>}` : K }[keyof T & string]` の挙動として正しいのは？",
+      "深いキーパス型 ``type Paths<T> = { [K in keyof T & string]: T[K] extends object ? K | `${K}.${Paths<T[K]>}` : K }[keyof T & string]`` の挙動として正しいのは？",
     choices: [
       "ネストしたオブジェクトに対し `'a' | 'a.b' | 'a.b.c'` のようなドット区切りキーパスをユニオン生成する",
       "深さ 1 のキーしか取得できない",
@@ -3654,7 +3654,7 @@ export const QUESTIONS: readonly Question[] = [
     category: "advanced",
     difficulty: "hard",
     prompt:
-      "`type Get<T, P extends string> = P extends `${infer K}.${infer R}` ? K extends keyof T ? Get<T[K], R> : never : P extends keyof T ? T[P] : never` の主目的は？",
+      "``type Get<T, P extends string> = P extends `${infer K}.${infer R}` ? K extends keyof T ? Get<T[K], R> : never : P extends keyof T ? T[P] : never`` の主目的は？",
     choices: [
       "ドット区切りパス文字列で深いプロパティ型を取り出す",
       "オブジェクトを Map に変換する",
