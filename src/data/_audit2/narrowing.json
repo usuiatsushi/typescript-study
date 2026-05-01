@@ -1,0 +1,132 @@
+{
+  "category": "narrowing",
+  "auditedCount": 35,
+  "issues": [
+    {
+      "id": "narrow-012",
+      "severity": "error",
+      "type": "wrong-answer",
+      "problem": "問題文では `s` の元の型が指定されていないが、選択肢1とその解説は『if の中では s の型から \"\" が除外される』と述べている。実際には s が単なる string 型の場合、TypeScript は型から空文字 '' を除外しない（『非空 string』を表現する型は存在しない）。truthiness narrowing が型レベルで除外するのは null/undefined と false/0 等のリテラル型だけ。解説は実行時挙動と型システムの挙動を混同しており誤解を招く。",
+      "currentChoiceTexts": [
+        "true として扱われる",
+        "false として扱われ、`if` の中では `s` の型から除外される",
+        "コンパイルエラー",
+        "string 型のまま変化しない"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "問題文を `s: string | undefined` のように具体的なユニオン型にし、選択肢を『falsy として扱われ、union から undefined（および空文字リテラル型）が除かれるが string 型自体に \"\" が含まれる場合は除去できない』のように正確化する。または『s: \"\" | \"hello\"` 型なら if の中で `\"hello\"` に絞られる』など、リテラル union を使った例に変更する。"
+    },
+    {
+      "id": "narrow-013",
+      "severity": "minor",
+      "type": "japanese",
+      "problem": "選択肢0 の補足『実行時には 0 も入らないが型上は number』は、日本語として『0 も入らない』が曖昧（『if の中に 0 は入らない』の意味）。読み手は『n に 0 を代入できない』と誤読する可能性がある。",
+      "currentChoiceTexts": [
+        "`number`（実行時には `0` も入らないが型上は `number`）",
+        "`number | undefined`",
+        "`undefined`",
+        "`never`"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "『実行時には 0 のときこのブロックに入らないが、型上は number のまま』のように『このブロックに入らない』と明示する。"
+    },
+    {
+      "id": "narrow-007",
+      "severity": "minor",
+      "type": "japanese",
+      "problem": "解説の『string にウィッデンされます』はカタカナ表記がぎこちない（『ウィッデン』はやや不自然）。一般的には『string に拡大（widen）されます』『widening により string になります』と表現する方が自然。",
+      "currentChoiceTexts": [
+        "'a' | 'b'",
+        "string",
+        "'a'",
+        "boolean"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "『let だと string にワイドニング（widening）されて string になります』または『let だと string 型に拡大されます』に修正。"
+    },
+    {
+      "id": "narrow-009",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説の『Function は (...args: any[]) => any 相当で意図的に緩い型のため、引数や戻り値までは推論しません』は概ね正しいが、組み込み Function インターフェースは call/apply/bind/length/name 等のメソッドを持つ広義のインターフェースであり、純粋なシグネチャ別名ではない点が省略されている。読み手が誤解する可能性。",
+      "currentChoiceTexts": [
+        "`Function`",
+        "`(...args: unknown[]) => unknown`",
+        "`object`",
+        "`never`"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説に『Function は call/apply/bind 等を含む組み込みインターフェースで、引数・戻り値は any として扱われる』と補足する。"
+    },
+    {
+      "id": "narrow-021",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説は概ね正しいが、`==` でも特定ケース（例: `== null` で null/undefined をまとめて除去）では narrowing が働く。『== は narrowing しない』と読めてしまうため誤解を招く可能性。",
+      "currentChoiceTexts": [
+        "`string`",
+        "`number`",
+        "`number | string`",
+        "`never`"
+      ],
+      "currentAnswerIndex": 2,
+      "fix": "解説に『ただし `== null` のような特殊ケースでは null/undefined をまとめて narrowing できる』を補足。"
+    },
+    {
+      "id": "narrow-029",
+      "severity": "minor",
+      "type": "ambiguity",
+      "problem": "選択肢0 は『判別可能ユニオンとして機能しない』と断言するが、TS は kind?: \"click\" | \"hover\" の場合、kind === \"click\" で対応バリアントへの narrowing は部分的に可能。『網羅性チェックが効かない』『undefined ケースの扱いが必要になる』が正確な問題点で、『機能しない』は強すぎる。",
+      "currentChoiceTexts": [
+        "`kind` が省略可能なので `switch (e.kind)` で網羅性チェックが効かず、判別可能ユニオンとして機能しない",
+        "型エイリアスは optional プロパティを持てない",
+        "リテラル型を optional にできない",
+        "問題なく判別可能ユニオンとして機能する"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "選択肢0 を『kind が undefined を取り得るため、switch での網羅性チェックや排他的バリアントへの絞り込みが意図通りに働かない』のような表現に和らげる。"
+    },
+    {
+      "id": "narrow-008",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説の『v は両者にあるため `in` では絞り込めず』は誤り。`if ('v' in x)` は両者の type に v があるので narrowing は『何も起きない』のではなく『both ブランチが残る』だけで、`in` 自体が判別不能なわけではない（同じ kind を持つ場合の話）。説明としては不正確。",
+      "currentChoiceTexts": [
+        "`if (x.kind === 'a') { /* x.v は number */ }` のように判別タグの等価チェックを使う",
+        "`if (x instanceof Object)` で絞り込む",
+        "`if ('v' in x)` で絞り込む",
+        "`as` で型をキャストする"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説を『v は両者に共通するため `'v' in x` では絞り込みに役立たず、instanceof はクラスでないと有効でない』のように修正。"
+    },
+    {
+      "id": "narrow-035",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "as const を配列に付けると tuple 化されるが、events[number] でアクセスした時のユニオン化は readonly オブジェクトのユニオンになる。解説は『判別可能ユニオンとして扱える』とだけ述べているが、events[i] のような indexed access が必要な点や、tuple のままでの扱いに触れておらず、実際にどうユニオンとして取り出すかが不明瞭。",
+      "currentChoiceTexts": [
+        "`as const` により各要素の `kind` がリテラル型になり、要素を判別ユニオンとして扱える",
+        "`as const` は配列を `readonly` にするだけで、判別ユニオン化には無関係",
+        "`as const` を使うと `kind` が `string` に広がる",
+        "コンパイルエラーになる"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説に『events[number]（あるいは typeof events[number]）でアクセスすると判別可能ユニオンになる』と具体的なアクセス方法を追記する。"
+    },
+    {
+      "id": "narrow-005",
+      "severity": "minor",
+      "type": "ambiguity",
+      "problem": "問題は『string | null を非 null に絞り込む最も簡潔な方法』。選択肢0は `if (x !== null)`。だが解説は `!= null` が null と undefined を一度に除外すると述べており、問題と解説が微妙にずれている（型は string | null のみで undefined はない）。",
+      "currentChoiceTexts": [
+        "if (x !== null) { /* ここで x は string */ }",
+        "if (typeof x === 'string') を使う以外にない",
+        "as string でキャストする",
+        "Object.is(x, null) を使う"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "問題型を `string | null | undefined` に変更するか、解説から `!= null` の話を取り除き `!== null` で完結させる。"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "category": "utility",
+  "auditedCount": 45,
+  "issues": [
+    {
+      "id": "util-007",
+      "severity": "minor",
+      "type": "japanese",
+      "problem": "「Promise のチェーンを再帰的に剥がし」という表現が曖昧。Awaited<T> が剥がすのはネストした Promise(`Promise<Promise<T>>`)であって、`.then()` チェーンや Thenable チェーンを実行時に解決するわけではない。日本語の『チェーン』だと .then() チェーンを連想させる。",
+      "currentChoiceTexts": [
+        "Promise のチェーンを再帰的に剥がし、最終的に解決される値の型を取り出す",
+        "Promise を実行時に await する関数",
+        "T を必ず Promise<T> でラップする型",
+        "T が Promise でなければ never になる"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "正答を『ネストした Promise(Promise<Promise<T>> など)を再帰的に剥がし、最終的な解決値の型を取り出す型』に変更。"
+    },
+    {
+      "id": "util-008",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説の『ラベル付きタプルとして引数名も保持されます』は誤解を招く。Parameters<typeof add> は内部的に [a: number, b: number] のラベル情報を保持するが、表示や互換性は通常のタプルと同等で『引数名が保持される』のは型表示上のみ。値の取り出しには影響しない。",
+      "currentChoiceTexts": [
+        "[a: number, b: number]",
+        "{ a: number; b: number }",
+        "number",
+        "(a: number, b: number) => number"
+      ],
+      "currentAnswerIndex": 0,
+      "fix": "解説に『ラベルは IDE 表示用で、構造的にはラベルなしタプルと等価』を補足。"
+    },
+    {
+      "id": "util-016",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "『--noImplicitThis を有効にした際に』は厳密には誤り。ThisType<T> は noImplicitThis の有無に関わらず動作するが、handbook の例として noImplicitThis 文脈で説明される。ただし noImplicitThis が必須の前提ではない。",
+      "currentChoiceTexts": [
+        "クラス継承で `this` の型を固定するために使う",
+        "`--noImplicitThis` を有効にした際に、オブジェクトリテラルのメソッド内 `this` の型を `T` として推論させるためのマーカー型として使う",
+        "`this` バインドを実行時に変更する",
+        "関数の戻り値に `this` を設定する"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "選択肢から『--noImplicitThis を有効にした際に』を外し、『オブジェクトリテラルのメソッド内 this の型を T として文脈的に推論させるマーカー型』とする。"
+    },
+    {
+      "id": "util-023",
+      "severity": "warning",
+      "type": "wrong-answer",
+      "problem": "正答とされる定義 `{ [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }` は配列・関数・Date などにも再帰してしまい『正しい定義』としては不完全。解説は注意点を述べているが、選択肢自体が caveat 付きの定義であり『正しい定義はどれか』という問いに対して誤解を生む。",
+      "currentChoiceTexts": [
+        "`type DeepPartial<T> = Partial<T>`",
+        "`type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }`",
+        "`type DeepPartial<T> = { [K in keyof T]: Partial<T[K]> }`",
+        "`type DeepPartial<T> = Readonly<T>`"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "問いを『DeepPartial の最も基本的な雛形』に変更するか、正答に関数/配列分岐を含めた定義(例: `T extends Function ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : { [K in keyof T]?: DeepPartial<T[K]> }`)を提示する。"
+    },
+    {
+      "id": "util-029",
+      "severity": "warning",
+      "type": "ambiguity",
+      "problem": "問題文に登場する `Without<B, A>` は組み込みでも一般的でもなく、未定義のまま使用されている。読者は意図を推測する必要があり、知識を問う設問としては不明瞭。",
+      "currentChoiceTexts": [
+        "両方のキーを必須にする",
+        "`A` と `B` のどちらか片方のキーセットだけを持つ排他的なオブジェクト型を表す",
+        "`A` と `B` の交差を取る",
+        "ユニオンを単純化する"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "Without の定義(例: `type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }`)を問題文に明記する。"
+    },
+    {
+      "id": "util-034",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説『1 & T は T が any のときに any になり、0 extends any が成立するため true になる』は概ね正しいが、他の T(例えば T = 0)で `1 & 0` は never となり 0 extends never は false という説明が無く、なぜ any のときだけ true になるのかの根拠が弱い。",
+      "currentChoiceTexts": [
+        "`T` が `unknown` のときだけ `true`",
+        "`1 & T` は `T` が `any` のときに `any` になり、`0 extends any` が成立するため `true` になる",
+        "`T` が `never` のときだけ `true`",
+        "常に `false`"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "解説に『通常の T では 1 & T は never やリテラル交差で 0 extends ... が成立しないため、any のみ成立する』を補足。"
+    },
+    {
+      "id": "util-036",
+      "severity": "warning",
+      "type": "explanation",
+      "problem": "IsUnknown<any> は実際には `true` でも `false` でもなく `boolean` を返す。解説は『any を排除する』としているが、内側の `T extends unknown` は any に対して分配されて `boolean` になることが本質で、結果として一致判定が崩れる仕組みを正確に説明していない。",
+      "currentChoiceTexts": [
+        "`unknown` 自身を弾くため",
+        "`T` が `any` のときに `IsUnknown` が `true` にならないように分配を経由する仕掛け",
+        "実行時の挙動を制御するため",
+        "意味はなく省略可能"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "解説に『any のときは内側条件型が分配されて boolean を返し、純粋な true ではなくなることで unknown と区別できる』を補足。"
+    },
+    {
+      "id": "util-038",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説『各要素を Awaited した結果のタプル』は正しいが、Promise.all のシグネチャが variadic tuple types(TS 4.0+) を活用してタプル推論する点に触れると正確。古い TS では (number|string)[] になる可能性がある。",
+      "currentChoiceTexts": [
+        "`Promise<any[]>`",
+        "`Promise<[number, string]>`",
+        "`Promise<unknown[]>`",
+        "`[Promise<number>, Promise<string>]`"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "解説に『TS 4.0 以降の variadic tuple types により配列リテラルがタプルとして推論される』を追記。"
+    },
+    {
+      "id": "util-024",
+      "severity": "minor",
+      "type": "weak-distractor",
+      "problem": "DeepReadonly の正答も util-023 同様、配列・関数を考慮しない『典型的』雛形であり、正答の選び方は他の選択肢が明らかに誤りであることに依存している(distractor が弱いわけではないが、util-023 と冗長)。",
+      "currentChoiceTexts": [
+        "`type DeepReadonly<T> = Readonly<T>`",
+        "`type DeepReadonly<T> = { readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K] }`",
+        "`type DeepReadonly<T> = { [K in keyof T]?: DeepReadonly<T[K]> }`",
+        "`type DeepReadonly<T> = T`"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "解説で『関数や配列も object に含まれるため厳密版では分岐が必要』を強調するか、より厳密な定義を併記。"
+    },
+    {
+      "id": "util-031",
+      "severity": "minor",
+      "type": "explanation",
+      "problem": "解説『順序は保証されません』は不正確。UnionToTuple の手法はオーバーロード関数の最後のシグネチャを抽出するため、TS の内部でユニオンが宣言順に並ぶ保証はないが、実装的には宣言順に近い順序になる『観測的順序』はある。『順序は保証されない』は正しいがニュアンスを補足するとよい。",
+      "currentChoiceTexts": [
+        "`U[]` を直接タプルに変換する",
+        "`UnionToIntersection` を使ってユニオンの最後の要素を取り出し、再帰的に削っていく",
+        "`keyof U` を使う",
+        "`infer R extends any[]` で一発で得られる"
+      ],
+      "currentAnswerIndex": 1,
+      "fix": "『TS の実装依存で順序が変わる可能性があり、安定性は仕様上保証されない』と明記。"
+    }
+  ]
+}
